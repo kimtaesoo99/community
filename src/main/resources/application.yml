@@ -10,7 +10,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       use-new-id-generator-mappings: false
@@ -28,5 +28,3 @@ spring:
   servlet.multipart.max-file-size: 5MB
   servlet.multipart.max-request-size: 5MB
 
-jwt:
-  secret:
