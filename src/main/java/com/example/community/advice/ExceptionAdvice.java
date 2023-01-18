@@ -1,6 +1,7 @@
 package com.example.community.advice;
 
 import com.example.community.exception.LoginFailureException;
+import com.example.community.exception.MemberNotFoundException;
 import com.example.community.exception.UsernameAlreadyExistsException;
 import com.example.community.response.Response;
 import lombok.extern.slf4j.Slf4j;
@@ -34,5 +35,13 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.CONFLICT)
     public Response memberEmailAlreadyExistsException(UsernameAlreadyExistsException e) {
         return Response.failure(409, e.getMessage() + "은 중복된 아이디 입니다.");
+    }
+
+    // 404 응답
+    // 요청한 유저를 찾을 수 없음
+    @ExceptionHandler(MemberNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response memberNotFoundException() {
+        return Response.failure(404, "요청한 회원을 찾을 수 없습니다.");
     }
 }
