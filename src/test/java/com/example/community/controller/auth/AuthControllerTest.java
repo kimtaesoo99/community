@@ -3,6 +3,7 @@ package com.example.community.controller.auth;
 
 import com.example.community.dto.sign.LoginRequestDto;
 import com.example.community.dto.sign.SignUpRequestDto;
+import com.example.community.dto.sign.TokenRequestDto;
 import com.example.community.dto.sign.TokenResponseDto;
 import com.example.community.service.auth.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -71,7 +72,7 @@ class AuthControllerTest {
     }
 
     @Test
-    void 널값무시_테스트() throws Exception {
+    public void Json응답_테스트() throws Exception {
         // 응답결과로 반환되는 JSON 문자열이 올바르게 제거되는지 검증
         // given
         SignUpRequestDto req = new SignUpRequestDto("test", "1234", "name");
@@ -83,5 +84,19 @@ class AuthControllerTest {
                     .content(objectMapper.writeValueAsString(req)))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.result").doesNotExist());
+    }
+
+    @Test
+    public void 토큰_재발급_테스트() throws Exception {
+        // given
+        TokenRequestDto req = new TokenRequestDto("access", "refresh");
+
+        // when, then
+        mockMvc.perform(
+                post("/api/reissue")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(req)))
+            .andExpect(status().isOk());
+
     }
 }
