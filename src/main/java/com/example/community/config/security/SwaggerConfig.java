@@ -29,7 +29,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.OAS_30)
             .apiInfo(apiInfo())
             .select()
-            .apis(RequestHandlerSelectors.basePackage("shoppingMall.server.controller"))
+            .apis(RequestHandlerSelectors.basePackage("com.example.community.controller"))
             .paths(PathSelectors.any())
             .build()
             .securityContexts(Arrays.asList(securityContext()))
