@@ -1,7 +1,7 @@
 package com.example.community.dto.sign;
 
-import com.example.community.entity.member.Authority;
-import com.example.community.entity.member.Member;
+import com.example.community.domain.member.Authority;
+import com.example.community.domain.member.Member;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

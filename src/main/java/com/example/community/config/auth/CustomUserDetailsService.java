@@ -1,7 +1,7 @@
 package com.example.community.config.auth;
 
 
-import com.example.community.entity.member.Member;
+import com.example.community.domain.member.Member;
 import com.example.community.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

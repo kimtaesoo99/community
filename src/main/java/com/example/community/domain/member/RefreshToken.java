@@ -1,4 +1,4 @@
-package com.example.community.entity.member;
+package com.example.community.domain.member;
 
 import lombok.Builder;
 import lombok.Getter;

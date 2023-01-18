@@ -1,6 +1,6 @@
 package com.example.community.repository.refreshToken;
 
-import com.example.community.entity.member.RefreshToken;
+import com.example.community.domain.member.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

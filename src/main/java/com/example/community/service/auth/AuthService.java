@@ -2,9 +2,9 @@ package com.example.community.service.auth;
 
 import com.example.community.config.jwt.TokenProvider;
 import com.example.community.dto.sign.*;
-import com.example.community.entity.member.Authority;
-import com.example.community.entity.member.Member;
-import com.example.community.entity.member.RefreshToken;
+import com.example.community.domain.member.Authority;
+import com.example.community.domain.member.Member;
+import com.example.community.domain.member.RefreshToken;
 import com.example.community.exception.LoginFailureException;
 import com.example.community.exception.UsernameAlreadyExistsException;
 import com.example.community.repository.member.MemberRepository;

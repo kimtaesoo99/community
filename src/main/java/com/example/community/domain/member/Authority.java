@@ -1,4 +1,4 @@
-package com.example.community.entity.member;
+package com.example.community.domain.member;
 
 public enum Authority {
     ROLE_USER, ROLE_ADMIN

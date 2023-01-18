@@ -1,7 +1,7 @@
 package com.example.community.factory;
 
-import com.example.community.entity.member.Authority;
-import com.example.community.entity.member.Member;
+import com.example.community.domain.member.Authority;
+import com.example.community.domain.member.Member;
 
 public class MemberFactory {
 
