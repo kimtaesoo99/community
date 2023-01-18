@@ -19,10 +19,9 @@ public class MemberService {
     @Transactional(readOnly = true)
     public List<MemberFindResponseDto> findAllMembers() {
         List<Member> members = memberRepository.findAll();
-        List<MemberFindResponseDto> result = members.stream()
-            .map(member -> MemberFindResponseDto.toDto(member))
+        return members.stream()
+            .map(MemberFindResponseDto::toDto)
             .collect(Collectors.toList());
-        return result;
     }
 
     @Transactional(readOnly = true)
