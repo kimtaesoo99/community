@@ -1,6 +1,8 @@
 package com.example.community.domain.member;
 
 import com.example.community.domain.common.BaseEntity;
+import com.example.community.dto.sign.SignUpRequestDto;
+import com.example.community.exception.UsernameAlreadyExistsException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,5 +39,10 @@ public class Member extends BaseEntity {
         this.password = password;
         this.name = name;
         this.authority = authority;
+    }
+
+    public void modify(String password,String name) {
+        this.password = password;
+        this.name = name;
     }
 }
