@@ -1,6 +1,9 @@
 package com.example.community.controller.member;
 
 
+import com.example.community.domain.member.Member;
+import com.example.community.dto.member.MemberEditRequestDto;
+import com.example.community.exception.MemberNotFoundException;
 import com.example.community.repository.member.MemberRepository;
 import com.example.community.response.Response;
 import com.example.community.service.member.MemberService;
@@ -9,7 +12,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+
 
 @Api(value = "Member Controller", tags = "Member")
 @RequestMapping("/api")
@@ -36,4 +44,31 @@ public class MemberController {
     }
 
 
+    @ApiOperation(value = "회원 정보 수정", notes = "회원 정보 수정")
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/members")
+    public Response editMemberInfo(@RequestBody MemberEditRequestDto memberEditRequestDto){
+        memberService.editMemberInfo(getPrincipal(), memberEditRequestDto);
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(getPrincipal().getUsername(),
+            memberEditRequestDto.getPassword());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        return Response.success();
+    }
+
+    @ApiOperation(value = "회원 탈퇴", notes = "회원을 탈퇴 시킴")
+    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping("/members")
+    public Response deleteMemberInfo() {
+        memberService.deleteMember(getPrincipal());
+        return Response.success();
+    }
+
+
+    public Member getPrincipal(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return memberRepository.findByUsername(authentication.getName())
+            .orElseThrow(MemberNotFoundException::new);
+    }
 }
