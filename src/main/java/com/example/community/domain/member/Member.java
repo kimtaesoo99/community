@@ -44,5 +44,6 @@ public class Member extends BaseEntity {
     public void modify(String password,String name) {
         this.password = password;
         this.name = name;
+        onPreUpdate();
     }
 }
