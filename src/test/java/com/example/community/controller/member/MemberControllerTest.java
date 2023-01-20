@@ -48,7 +48,7 @@ public class MemberControllerTest {
     }
 
     @Test
-    public void 회원전체조회() throws Exception {
+    public void 회원전체조회테스트() throws Exception {
         mockMvc.perform(
                 get("/api/members"))
             .andExpect(status().isOk());
@@ -56,7 +56,7 @@ public class MemberControllerTest {
     }
 
     @Test
-    public void 회원단건조회() throws Exception {
+    public void 회원단건조회테스트() throws Exception {
         //given
         Long id = 1L;
 
@@ -69,7 +69,7 @@ public class MemberControllerTest {
 
 
     @Test
-    public void 회원정보수정() throws Exception {
+    public void 회원정보수정테스트() throws Exception {
         // given
         MemberEditRequestDto req = new MemberEditRequestDto("비밀번호수정","이름 수정");
         Member member = createMember();
@@ -89,7 +89,7 @@ public class MemberControllerTest {
     }
 
     @Test
-    public void 회원탈퇴() throws Exception {
+    public void 회원탈퇴테스트() throws Exception {
         // given
         Member member = createMember();
         Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
