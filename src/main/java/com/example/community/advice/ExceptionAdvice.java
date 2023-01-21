@@ -2,6 +2,7 @@ package com.example.community.advice;
 
 import com.example.community.exception.LoginFailureException;
 import com.example.community.exception.MemberNotFoundException;
+import com.example.community.exception.MessageNotFoundException;
 import com.example.community.exception.UsernameAlreadyExistsException;
 import com.example.community.response.Response;
 import lombok.extern.slf4j.Slf4j;
@@ -43,5 +44,13 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response memberNotFoundException() {
         return Response.failure(404, "요청한 회원을 찾을 수 없습니다.");
+    }
+
+    // 404 응답
+    // 요청한 쪽지를 찾을 수 없음
+    @ExceptionHandler(MessageNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response messageNotFoundException() {
+        return Response.failure(404, "요청한 쪽지를 찾을 수 없습니다.");
     }
 }
