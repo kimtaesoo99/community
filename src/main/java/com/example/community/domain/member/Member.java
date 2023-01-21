@@ -1,14 +1,15 @@
 package com.example.community.domain.member;
 
 import com.example.community.domain.common.BaseEntity;
-import com.example.community.dto.sign.SignUpRequestDto;
-import com.example.community.exception.UsernameAlreadyExistsException;
+import com.example.community.domain.message.Message;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -32,6 +33,12 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
+    @OneToMany(mappedBy = "receiver",fetch = FetchType.LAZY)
+    private List<Message> receivedMessages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "sender",fetch = FetchType.LAZY)
+    private List<Message> sentMessages = new ArrayList<>();
+
     @Builder
     public Member(Long id, String username, String password, String name, Authority authority) {
         this.id = id;
@@ -46,4 +53,18 @@ public class Member extends BaseEntity {
         this.name = name;
         onPreUpdate();
     }
+
+    public void sendMessage(Message message){
+        sentMessages.add(message);
+    }
+    public void receiveMessage(Message message){
+        receivedMessages.add(message);
+    }
+    public void deleteReceiveMessage(Message message){
+        receivedMessages.remove(message);
+    }
+    public void deleteSendMessage(Message message){
+        sentMessages.remove(message);
+    }
+
 }
