@@ -74,6 +74,15 @@ public class SecurityConfig {
             .antMatchers(HttpMethod.PUT, "/api/members/{id}").hasAnyAuthority( "ROLE_USER", "ROLE_ADMIN")
             .antMatchers(HttpMethod.DELETE, "/api/members/{id}").hasAnyAuthority( "ROLE_USER", "ROLE_ADMIN")
 
+            .antMatchers(HttpMethod.POST, "/api/messages").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+            .antMatchers(HttpMethod.GET, "/api/messages/sender").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+            .antMatchers(HttpMethod.GET, "/api/messages/sender/{id}").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+            .antMatchers(HttpMethod.GET, "/api/messages/receiver").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+            .antMatchers(HttpMethod.GET, "/api/messages/receiver/{id}").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+            .antMatchers(HttpMethod.DELETE, "/api/messages/sender/{id}").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+            .antMatchers(HttpMethod.DELETE, "/api/messages/receiver/{id}").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+
+
             .anyRequest().authenticated()   // 나머지 API 는 전부 인증 필요
 
             // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
