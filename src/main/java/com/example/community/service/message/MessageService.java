@@ -38,28 +38,29 @@ public class MessageService {
 
     @Transactional(readOnly = true)
     public List<MessageFindAllResponseDto> findALlReceiveMessages(Member member){
-        return messageRepository.findAllByReceiverQuery(member.getUsername())
-            .stream().map(MessageFindAllResponseDto::toDto).collect(Collectors.toList());
+        List<Message> messages = messageRepository.findAllByReceiverQuery(member.getUsername());
+        return messages.stream().map(MessageFindAllResponseDto::toDto).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public MessageFindResponseDto findReceiveMessage(Member member,Long id){
-        return messageRepository.findByIdWithReceiver(id, member.getUsername())
-            .map(MessageFindResponseDto::toDto)
+        Message message = messageRepository.findByIdWithReceiver(id, member.getUsername())
             .orElseThrow(MessageNotFoundException::new);
+        return MessageFindResponseDto.toDto(message);
+
     }
 
     @Transactional(readOnly = true)
     public List<MessageFindAllResponseDto> findAllSendMessages(Member member){
-        return messageRepository.findAllBySenderQuery(member.getUsername())
-            .stream().map(MessageFindAllResponseDto::toDto).collect(Collectors.toList());
+        List<Message> messages = messageRepository.findAllBySenderQuery(member.getUsername());
+        return messages.stream().map(MessageFindAllResponseDto::toDto).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public MessageFindResponseDto findSendMessage(Member member,Long id){
-        return messageRepository.findByIdWithSender(id, member.getUsername())
-            .map(MessageFindResponseDto::toDto)
+        Message message = messageRepository.findByIdWithSender(id, member.getUsername())
             .orElseThrow(MessageNotFoundException::new);
+        return MessageFindResponseDto.toDto(message);
     }
 
     @Transactional
