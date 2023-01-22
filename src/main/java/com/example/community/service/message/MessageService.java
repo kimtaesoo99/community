@@ -34,65 +34,52 @@ public class MessageService {
             sender,
             receiver);
         messageRepository.save(message);
-        sender.sendMessage(message);
-        receiver.receiveMessage(message);
     }
 
     @Transactional(readOnly = true)
     public List<MessageFindAllResponseDto> findALlReceiveMessages(Member member){
-        return member.getReceivedMessages().stream()
-            .filter(m -> !m.isDeletedByReceiver())
-            .map(MessageFindAllResponseDto::toDto).collect(Collectors.toList());
+        return messageRepository.findAllByReceiverQuery(member.getUsername())
+            .stream().map(MessageFindAllResponseDto::toDto).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public MessageFindResponseDto findReceiveMessage(Member member,Long id){
-        return member.getReceivedMessages().stream()
-            .filter(m -> m.getId().equals(id))
-            .filter(m -> !m.isDeletedByReceiver())
+        return messageRepository.findByIdWithReceiver(id, member.getUsername())
             .map(MessageFindResponseDto::toDto)
-            .findFirst().orElseThrow(MessageNotFoundException::new);
+            .orElseThrow(MessageNotFoundException::new);
     }
 
     @Transactional(readOnly = true)
     public List<MessageFindAllResponseDto> findAllSendMessages(Member member){
-        return member.getSentMessages().stream()
-            .filter(m -> !m.isDeletedBySender())
-            .map(MessageFindAllResponseDto::toDto).collect(Collectors.toList());
+        return messageRepository.findAllBySenderQuery(member.getUsername())
+            .stream().map(MessageFindAllResponseDto::toDto).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public MessageFindResponseDto findSendMessage(Member member,Long id){
-        return member.getSentMessages().stream()
-            .filter(m ->  m.getId().equals(id))
-            .filter(m -> !m.isDeletedBySender())
+        return messageRepository.findByIdWithSender(id, member.getUsername())
             .map(MessageFindResponseDto::toDto)
-            .findFirst().orElseThrow(MessageNotFoundException::new);
+            .orElseThrow(MessageNotFoundException::new);
     }
 
     @Transactional
     public void deleteReceiverMessage(Member member,Long id){
-        Message message = member.getReceivedMessages().stream()
-            .filter(m -> m.getId().equals(id)).findFirst()
+        Message message = messageRepository.findByIdWithReceiver(id, member.getUsername())
             .orElseThrow(MessageNotFoundException::new);
         message.deleteByReceiver();
         if (message.isDeletedBySender() && message.isDeletedByReceiver()){
             messageRepository.delete(message);
-            member.deleteReceiveMessage(message);
         }
     }
 
 
     @Transactional
     public void deleteSenderMessage(Member member,Long id){
-        Message message = member.getSentMessages().stream()
-            .filter(m -> m.getId().equals(id)).findFirst()
+        Message message = messageRepository.findByIdWithSender(id, member.getUsername())
             .orElseThrow(MessageNotFoundException::new);
         message.deleteBySender();
         if (message.isDeletedBySender()&& message.isDeletedByReceiver()){
             messageRepository.delete(message);
-            member.deleteSendMessage(message);
         }
     }
-
 }
