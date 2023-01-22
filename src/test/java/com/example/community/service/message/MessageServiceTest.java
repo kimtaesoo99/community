@@ -14,12 +14,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static com.example.community.factory.MemberFactory.createMember;
 import static com.example.community.factory.MessageFactory.createMessage;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -62,8 +63,11 @@ public class MessageServiceTest {
             .username("sender")
             .build();
         Member receiver = createMember();
-        Message message = createMessage(id,sender,receiver);
-        receiver.receiveMessage(message);
+        List<Message> messages = new ArrayList<>();
+        Message message = new Message("title", "content", sender, receiver);
+        messages.add(message);
+        given(messageRepository.findAllByReceiverQuery(receiver.getUsername()))
+            .willReturn(messages);
 
         //when
         List<MessageFindAllResponseDto> result = messageService
@@ -82,7 +86,8 @@ public class MessageServiceTest {
             .build();
         Member receiver = createMember();
         Message message = createMessage(id,sender,receiver);
-        receiver.receiveMessage(message);
+        given(messageRepository.findByIdWithReceiver(id, receiver.getUsername()))
+            .willReturn(Optional.of(message));
 
         //when
         MessageFindResponseDto result = messageService
@@ -100,8 +105,11 @@ public class MessageServiceTest {
             .username("sender")
             .build();
         Member receiver = createMember();
-        Message message = createMessage(id,sender,receiver);
-        sender.sendMessage(message);
+        List<Message> messages = new ArrayList<>();
+        Message message = new Message("title", "content", sender, receiver);
+        messages.add(message);
+        given(messageRepository.findAllBySenderQuery(sender.getUsername()))
+            .willReturn(messages);
 
         //when
         List<MessageFindAllResponseDto> result = messageService
@@ -120,7 +128,8 @@ public class MessageServiceTest {
             .build();
         Member receiver = createMember();
         Message message = createMessage(id,sender,receiver);
-        sender.sendMessage(message);
+        given(messageRepository.findByIdWithSender(id, sender.getUsername()))
+            .willReturn(Optional.of(message));
 
         //when
         MessageFindResponseDto result = messageService
@@ -140,7 +149,8 @@ public class MessageServiceTest {
             .build();
         Member receiver = createMember();
         Message message = createMessage(id,sender,receiver);
-        receiver.receiveMessage(message);
+        given(messageRepository.findByIdWithReceiver(id, receiver.getUsername()))
+            .willReturn(Optional.of(message));
 
         //when
         messageService.deleteReceiverMessage(receiver,id);
@@ -158,7 +168,8 @@ public class MessageServiceTest {
             .build();
         Member receiver = createMember();
         Message message = createMessage(id,sender,receiver);
-        sender.sendMessage(message);
+        given( messageRepository.findByIdWithSender(id, sender.getUsername()))
+            .willReturn(Optional.of(message));
 
         //when
         messageService.deleteSenderMessage(sender,id);
@@ -176,8 +187,10 @@ public class MessageServiceTest {
             .build();
         Member receiver = createMember();
         Message message = createMessage(id,sender,receiver);
-        sender.sendMessage(message);
-        receiver.receiveMessage(message);
+        given( messageRepository.findByIdWithSender(id, sender.getUsername()))
+            .willReturn(Optional.of(message));
+        given(messageRepository.findByIdWithReceiver(id, receiver.getUsername()))
+            .willReturn(Optional.of(message));
 
         //when
         messageService.deleteSenderMessage(sender,id);
