@@ -57,7 +57,7 @@ public class Image extends BaseEntity {
         try {
             String ext = originName.substring(originName.lastIndexOf(".") + 1);
             if(isSupportedFormat(ext)) return ext;
-        } catch (StringIndexOutOfBoundsException e) { }
+        } catch (StringIndexOutOfBoundsException ignored) { }
             throw new UnsupportedImageFormatException();
     }
 
