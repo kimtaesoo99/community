@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class ImageDto {
+
     private Long id;
     private String originName;
     private String uniqueName;
