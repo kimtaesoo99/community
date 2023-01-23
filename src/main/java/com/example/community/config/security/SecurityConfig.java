@@ -82,6 +82,15 @@ public class SecurityConfig {
             .antMatchers(HttpMethod.DELETE, "/api/messages/sender/{id}").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
             .antMatchers(HttpMethod.DELETE, "/api/messages/receiver/{id}").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
 
+            .antMatchers(HttpMethod.POST, "/api/boards").authenticated()
+            .antMatchers(HttpMethod.GET, "/api/boards/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+            .antMatchers(HttpMethod.GET, "/api/boards/best").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+            .antMatchers(HttpMethod.GET, "/api/boards/{id}").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+            .antMatchers(HttpMethod.POST, "/api/boards/{id}").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+            .antMatchers(HttpMethod.POST, "/api/boards/{id}/favorites").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+            .antMatchers(HttpMethod.PUT, "/api/boards/{id}").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+            .antMatchers(HttpMethod.DELETE, "/api/boards/{id}").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+
 
             .anyRequest().authenticated()   // 나머지 API 는 전부 인증 필요
 
