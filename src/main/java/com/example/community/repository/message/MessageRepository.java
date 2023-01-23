@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface MessageRepository extends JpaRepository<Message,Long> {
 
     @Query("select m from Message m join fetch m.receiver r " +
-        "where m.deletedByReceiver=false and r.username =:username")
+        "where m.deletedByReceiver=false and r.username =:username order by m.id desc")
     List<Message> findAllByReceiverQuery(@Param("username") String username);
 
     @Query("select m from Message m join fetch  m.receiver r " +
@@ -19,7 +19,7 @@ public interface MessageRepository extends JpaRepository<Message,Long> {
     Optional<Message> findByIdWithReceiver(@Param("id") Long id, @Param("username") String username);
 
     @Query("select m from Message m join fetch m.sender r " +
-        "where m.deletedBySender=false and r.username =:username")
+        "where m.deletedBySender=false and r.username =:username order by m.id desc ")
     List<Message> findAllBySenderQuery(@Param("username") String username);
 
     @Query("select m from Message m join fetch  m.sender r " +
