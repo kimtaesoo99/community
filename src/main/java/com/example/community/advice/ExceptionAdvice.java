@@ -1,9 +1,6 @@
 package com.example.community.advice;
 
-import com.example.community.exception.LoginFailureException;
-import com.example.community.exception.MemberNotFoundException;
-import com.example.community.exception.MessageNotFoundException;
-import com.example.community.exception.UsernameAlreadyExistsException;
+import com.example.community.exception.*;
 import com.example.community.response.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -53,4 +50,38 @@ public class ExceptionAdvice {
     public Response messageNotFoundException() {
         return Response.failure(404, "요청한 쪽지를 찾을 수 없습니다.");
     }
+
+    // 404 응답
+    // 요청한 게시판을 찾을 수 없음
+    @ExceptionHandler(BoardNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response boardNotFoundException() {
+        return Response.failure(404, "요청한 게시판을 찾을 수 없습니다.");
+    }
+
+    // 404 응답
+    // Image 형식 지원하지 않음
+    @ExceptionHandler(UnsupportedImageFormatException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response unsupportedImageFormatException() {
+        return Response.failure(404, "이미지 형식을 지원하지 않습니다.");
+    }
+
+    // 404 응답
+    // 파일 업로드 실패
+    @ExceptionHandler(FileUploadFailureException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response fileUploadFailureException(FileUploadFailureException e) {
+        log.error("e = {}", e.getMessage());
+        return Response.failure(404, "이미지 업로드 실패");
+    }
+
+    // 401 응답
+    // 요청자와 요청한 유저의 정보가 일치하지 않을시에 발생
+    @ExceptionHandler(MemberNotEqualsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Response memberNotEqualsException() {
+        return Response.failure(401, "유저 정보가 일치하지 않습니다.");
+    }
+
 }
