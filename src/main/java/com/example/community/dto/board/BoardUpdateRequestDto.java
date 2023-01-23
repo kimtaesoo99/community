@@ -24,9 +24,9 @@ public class BoardUpdateRequestDto {
     @NotBlank(message = "게시글 내용을 입력해주세요.")
     private String content;
 
-    @ApiModelProperty(value = "추가된 이미지", notes = "추가된 이미지를 첨부해주세요.")
+    @ApiModelProperty(value = "추가할 이미지", notes = "추가할 이미지를 첨부해주세요.")
     private List<MultipartFile> addedImages = new ArrayList<>();
 
-    @ApiModelProperty(value = "제거된 이미지 아이디", notes = "제거된 이미지 아이디를 입력해주세요.")
+    @ApiModelProperty(value = "제거할 이미지 아이디", notes = "제거할 이미지 아이디를 입력해주세요.")
     private List<Integer> deletedImages = new ArrayList<>();
 }
