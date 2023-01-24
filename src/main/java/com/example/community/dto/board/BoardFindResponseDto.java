@@ -20,6 +20,8 @@ public class BoardFindResponseDto {
     private String writer;
     private String title;
     private String content;
+    private int likeCount;
+    private int viewCount;
     private List<ImageDto> images;
     private LocalDateTime createAt;
 
@@ -29,6 +31,8 @@ public class BoardFindResponseDto {
             writer,
             board.getTitle(),
             board.getContent(),
+            board.getLikeCount(),
+            board.getViewCount(),
             board.getImages().stream().map(i -> ImageDto.toDto(i)).collect(toList()),
             board.getCreatedAt()
         );
