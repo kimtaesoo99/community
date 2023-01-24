@@ -1,12 +1,18 @@
 package com.example.community.service.board;
 
 import com.example.community.domain.board.Board;
+import com.example.community.domain.board.Favorite;
 import com.example.community.domain.board.Image;
+import com.example.community.domain.board.Likes;
 import com.example.community.domain.member.Member;
 import com.example.community.dto.board.*;
 import com.example.community.exception.BoardNotFoundException;
+import com.example.community.exception.FavoriteNotFoundException;
+import com.example.community.exception.LikeNotFoundException;
 import com.example.community.exception.MemberNotEqualsException;
 import com.example.community.repository.board.BoardRepository;
+import com.example.community.repository.board.FavoriteRepository;
+import com.example.community.repository.board.LikeRepository;
 import com.example.community.service.file.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,6 +33,8 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final FileService fileService;
+    private final LikeRepository likeRepository;
+    private final FavoriteRepository favoriteRepository;
 
     @Transactional
     public void createBoard(BoardCreateRequestDto req, Member member){
@@ -47,10 +55,11 @@ public class BoardService {
         return BoardFindAllWithPagingResponseDto.toDto(boardsWithDto, new PageInfoDto(boards));
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public BoardFindResponseDto findBoard(Long id){
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
         Member member = board.getMember();
+        board.increaseViewCount();
         return BoardFindResponseDto.toDto(member.getUsername(), board);
     }
 
@@ -80,10 +89,80 @@ public class BoardService {
         return BoardFindAllWithPagingResponseDto.toDto(boardsWithDto, new PageInfoDto(boards));
     }
 
+    @Transactional
+    public String updateLikeBoard(Long id, Member member){
+        Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
+        if (!hasLikeBoard(board,member)){
+            board.increaseLikeCount();
+            return createLikeBoard(board, member);
+        }
+        board.decreaseLikeCount();
+        return removeLikeBoard(board, member);
+    }
+
+    @Transactional
+    public String updateFavoriteBoard(Long id, Member member) {
+        Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
+        if (!hasFavoriteBoard(board, member)) {
+            return createFavoriteBoard(board, member);
+        }
+        return removeFavoriteBoard(board, member);
+    }
+
+    @Transactional(readOnly = true)
+    public BoardFindAllWithPagingResponseDto findFavoriteBoards(Integer page, Member member) {
+        PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("id").descending());
+        Page<Favorite> favorites = favoriteRepository.findAllByMember(member,pageRequest);
+        List<BoardFindAllResponseDto> boardsWithDto =  favorites.stream().map(Favorite::getBoard).map(BoardFindAllResponseDto::toDto)
+            .collect(toList());
+        return BoardFindAllWithPagingResponseDto.toDto(boardsWithDto, new PageInfoDto(favorites));
+    }
+
+    @Transactional(readOnly = true)
+    public BoardFindAllWithPagingResponseDto findAllBoardsWithLikes(Integer page) {
+        PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("likeCount").descending());
+        Page<Board> boards = boardRepository.findAll(pageRequest);
+        List<BoardFindAllResponseDto> boardsWithDto = boards.stream().map(BoardFindAllResponseDto::toDto)
+            .collect(toList());
+        return BoardFindAllWithPagingResponseDto.toDto(boardsWithDto, new PageInfoDto(boards));
+    }
+
     private void validateBoardWriter(Board board, Member member){
         if (!member.equals(board.getMember())){
             throw new MemberNotEqualsException();
         }
+    }
+
+    private boolean hasLikeBoard(Board board, Member member){
+        return likeRepository.findByBoardAndMember(board, member).isPresent();
+    }
+
+    private String createLikeBoard(Board board, Member member) {
+        Likes likesBoard = new Likes(board, member);
+        likeRepository.save(likesBoard);
+        return "좋아요를 눌렀습니다.";
+    }
+
+    private String removeLikeBoard(Board board, Member member) {
+        Likes likesBoard = likeRepository.findByBoardAndMember(board, member).orElseThrow(LikeNotFoundException::new);
+        likeRepository.delete(likesBoard);
+        return "좋아요를 취소했습니다.";
+    }
+
+    private boolean hasFavoriteBoard(Board board, Member member) {
+        return favoriteRepository.findByBoardAndMember(board, member).isPresent();
+    }
+
+    private String createFavoriteBoard(Board board, Member member) {
+        Favorite favorite = new Favorite(board, member);
+        favoriteRepository.save(favorite);
+        return "게시판을 즐겨찾기에 추가합니다.";
+    }
+
+    private String removeFavoriteBoard(Board board, Member member) {
+        Favorite favorite = favoriteRepository.findByBoardAndMember(board, member).orElseThrow(FavoriteNotFoundException::new);
+        favoriteRepository.delete(favorite);
+        return "게시판을 즐겨찾기에서 삭제합니다.";
     }
 
 
@@ -95,4 +174,5 @@ public class BoardService {
     private void deleteImages(List<Image> images) {
         images.forEach(i -> fileService.delete(i.getUniqueName()));
     }
+
 }
