@@ -60,6 +60,22 @@ public class ExceptionAdvice {
     }
 
     // 404 응답
+    // 좋아요기록을 찾을 수 없음
+    @ExceptionHandler(LikeNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response likeNotFoundException() {
+        return Response.failure(404, "게시판 좋아요 기록을 찾을 수 없습니다.");
+    }
+
+    // 404 응답
+    // 즐겨찾기를 찾을 수 없음
+    @ExceptionHandler(FavoriteNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response favoriteNotFoundException() {
+        return Response.failure(404, "즐겨찾기 게시판을 찾을 수 없습니다.");
+    }
+
+    // 404 응답
     // Image 형식 지원하지 않음
     @ExceptionHandler(UnsupportedImageFormatException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
