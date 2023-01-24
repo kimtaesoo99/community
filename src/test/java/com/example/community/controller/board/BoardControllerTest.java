@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.example.community.factory.MemberFactory.createMember;
+import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -169,5 +170,73 @@ class BoardControllerTest {
 
         //then
         verify(boardService).searchBoard(keyword, page);
+    }
+
+    @Test
+    public void 게시글좋아요_테스트() throws Exception{
+        //given
+        Long id =1L;
+        Member member = createMember();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "", Collections.emptyList());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+
+        //when
+        mockMvc.perform(
+            post("/api/boards/{id}", id)
+        ).andExpect(status().isOk());
+
+        //then
+        verify(boardService).updateLikeBoard(id, member);
+    }
+
+    @Test
+    public void 게시글즐겨찾기_테스트() throws Exception{
+        //given
+        Long id =1L;
+        Member member = createMember();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "", Collections.emptyList());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+
+        //when
+        mockMvc.perform(
+            post("/api/boards/{id}/favorites", id)
+        ).andExpect(status().isOk());
+
+        //then
+        verify(boardService).updateFavoriteBoard(id, member);
+    }
+
+    @Test
+    public void 게시글즐겨찾기목록조회_테스트() throws Exception{
+        //given
+        Integer page =0;
+        Member member = createMember();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "", Collections.emptyList());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+
+        //when
+        mockMvc.perform(
+            get("/api/boards/favorites")
+        ).andExpect(status().isOk());
+
+        //then
+        verify(boardService).findFavoriteBoards(page,member);
+    }
+
+    @Test
+    public void 게시글좋아요순으로조회_테스트() throws Exception{
+        //given
+        Integer page = 0;
+
+        //when
+        mockMvc.perform(
+                get("/api/boards/likes"))
+            .andExpect(status().isOk());
+
+        //then
+        verify(boardService).findAllBoardsWithLikes(page);
     }
 }
