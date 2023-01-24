@@ -1,13 +1,17 @@
 package com.example.community.service.board;
 
 import com.example.community.domain.board.Board;
+import com.example.community.domain.board.Favorite;
 import com.example.community.domain.board.Image;
+import com.example.community.domain.board.Likes;
 import com.example.community.domain.member.Member;
 import com.example.community.dto.board.BoardCreateRequestDto;
 import com.example.community.dto.board.BoardFindAllWithPagingResponseDto;
 import com.example.community.dto.board.BoardFindResponseDto;
 import com.example.community.dto.board.BoardUpdateRequestDto;
 import com.example.community.repository.board.BoardRepository;
+import com.example.community.repository.board.FavoriteRepository;
+import com.example.community.repository.board.LikeRepository;
 import com.example.community.service.file.FileService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +30,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.example.community.factory.BoardFactory.createBoard;
+import static com.example.community.factory.ImageFactory.createImage;
 import static com.example.community.factory.MemberFactory.createMember;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,6 +45,10 @@ class BoardServiceTest {
     BoardRepository boardRepository;
     @Mock
     FileService fileService;
+    @Mock
+    LikeRepository likeRepository;
+    @Mock
+    FavoriteRepository favoriteRepository;
 
     @Test
     public void 게시판생성_테스트() throws Exception{
@@ -140,5 +149,116 @@ class BoardServiceTest {
         assertThat(result.getBoards().size()).isEqualTo(1);
     }
 
+    @Test
+    public void 게시판좋아요추가_테스트() throws Exception{
+        //given
+        Long id = 1L;
+        Member member = createMember();
+        Board board = createBoard();
+
+        given(boardRepository.findById(id)).willReturn(Optional.of(board));
+
+        //when
+        String result = boardService.updateLikeBoard(id, member);
+
+        // then
+        assertThat(result).isEqualTo("좋아요를 눌렀습니다.");
+        verify(likeRepository).save(any());
+    }
+
+    @Test
+    public void 게시판좋아요취소_테스트() throws Exception{
+        //given
+        Long id = 1L;
+        Member member = createMember();
+        Board board = createBoard();
+        Likes likes = new Likes(board, member);
+
+        given(boardRepository.findById(id)).willReturn(Optional.of(board));
+        given(likeRepository.findByBoardAndMember(board, member)).willReturn(Optional.of(likes));
+
+        //when
+        String result = boardService.updateLikeBoard(id, member);
+
+        // then
+        assertThat(result).isEqualTo("좋아요를 취소했습니다.");
+        verify(likeRepository).delete(any());
+    }
+
+    @Test
+    public void 게시판즐겨찾기추가_테스트() throws Exception{
+        //given
+        Long id = 1L;
+        Member member = createMember();
+        Board board = createBoard();
+
+        given(boardRepository.findById(id)).willReturn(Optional.of(board));
+
+        //when
+        String result = boardService.updateFavoriteBoard(id, member);
+
+        // then
+        assertThat(result).isEqualTo("게시판을 즐겨찾기에 추가합니다.");
+        verify(favoriteRepository).save(any());
+    }
+
+    @Test
+    public void 게시판즐겨찾기취소_테스트() throws Exception{
+        //given
+        Long id = 1L;
+        Member member = createMember();
+        Board board = createBoard();
+        Favorite favorite = new Favorite(board, member);
+
+        given(boardRepository.findById(id)).willReturn(Optional.of(board));
+        given(favoriteRepository.findByBoardAndMember(board, member)).willReturn(Optional.of(favorite));
+
+        //when
+        String result = boardService.updateFavoriteBoard(id, member);
+
+        // then
+        assertThat(result).isEqualTo("게시판을 즐겨찾기에서 삭제합니다.");
+        verify(favoriteRepository).delete(any());
+    }
+
+
+    @Test
+    public void 게시글즐겨찾기목록조회_테스트() throws Exception{
+        //given
+        Integer page = 0;
+        PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("id").descending());
+        Member member = createMember();
+        List<Favorite> favorites = new ArrayList<>();
+        favorites.add(new Favorite(1L,createBoard(),member));
+        Page<Favorite> favoritesWithPaging = new PageImpl<>(favorites);
+        given(favoriteRepository.findAllByMember(member,pageRequest)).willReturn(favoritesWithPaging);
+
+        //when
+        BoardFindAllWithPagingResponseDto result = boardService.findFavoriteBoards(page,member);
+
+        //then
+        assertThat(result.getBoards().size()).isEqualTo(1);
+    }
+
+    @Test
+    public void 게시글인기순조회_테스트() throws Exception{
+        //given
+        Integer page = 0;
+        PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("likeCount").descending());
+        List<Board> boards = new ArrayList<>();
+        Board board = new Board("likeBoard", "content", createMember(),List.of(createImage()));
+        board.increaseLikeCount();
+        boards.add(board);
+        boards.add(createBoard());
+
+        Page<Board> boardsWithPaging = new PageImpl<>(boards);
+        given(boardRepository.findAll(pageRequest)).willReturn(boardsWithPaging);
+
+        //when
+        BoardFindAllWithPagingResponseDto result = boardService.findAllBoardsWithLikes(page);
+
+        //then
+        assertThat(result.getBoards().get(0).getTitle()).isEqualTo("likeBoard");
+    }
 
 }
