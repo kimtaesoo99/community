@@ -44,10 +44,16 @@ public class Board extends BaseEntity {
     @OneToMany(mappedBy = "board",fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Image> images;
 
+    private int likeCount;
+
+    private int viewCount;
+
     public Board(String title, String content, Member member, List<Image> images) {
         this.title = title;
         this.content = content;
         this.member = member;
+        this.likeCount = 0;
+        this.viewCount = 0;
         this.images = new ArrayList<>();
         addImages(images);
     }
@@ -94,6 +100,19 @@ public class Board extends BaseEntity {
     private List<Image> convertImageFilesToImages(List<MultipartFile> imageFiles) {
         return imageFiles.stream().map(imageFile -> new Image(imageFile.getOriginalFilename())).collect(toList());
     }
+
+    public void increaseLikeCount() {
+        this.likeCount += 1;
+    }
+
+    public void decreaseLikeCount() {
+        this.likeCount -= 1;
+    }
+
+    public void increaseViewCount(){
+        this.viewCount +=1;
+    }
+
 
     @Getter
     @AllArgsConstructor
