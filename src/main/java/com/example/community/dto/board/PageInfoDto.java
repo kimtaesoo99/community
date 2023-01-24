@@ -1,7 +1,6 @@
 package com.example.community.dto.board;
 
 
-import com.example.community.domain.board.Board;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +15,7 @@ public class PageInfoDto {
     private int numberOfElements; // 현재 페이지에 나올 데이터 수
     private boolean isNext; // 다음 페이지 존재 여부
 
-    public PageInfoDto(Page<Board> result) {
+    public PageInfoDto(Page result) {
         this.totalPage = result.getTotalPages();
         this.nowPage = result.getNumber();
         this.numberOfElements = result.getNumberOfElements();
