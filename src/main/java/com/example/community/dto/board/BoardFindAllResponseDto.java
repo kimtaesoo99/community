@@ -12,8 +12,9 @@ public class BoardFindAllResponseDto {
     private Long id;
     private String title;
     private String nickname;
+    private int viewCount;
 
     public static BoardFindAllResponseDto toDto(Board board){
-        return new BoardFindAllResponseDto(board.getId(), board.getTitle(), board.getMember().getUsername());
+        return new BoardFindAllResponseDto(board.getId(), board.getTitle(), board.getMember().getUsername(), board.getViewCount());
     }
 }
