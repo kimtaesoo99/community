@@ -84,10 +84,12 @@ public class SecurityConfig {
 
             .antMatchers(HttpMethod.POST, "/api/boards").authenticated()
             .antMatchers(HttpMethod.GET, "/api/boards/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-            .antMatchers(HttpMethod.GET, "/api/boards/best").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+            .antMatchers(HttpMethod.GET, "/api/boards/likes").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
             .antMatchers(HttpMethod.GET, "/api/boards/{id}").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
             .antMatchers(HttpMethod.POST, "/api/boards/{id}").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
             .antMatchers(HttpMethod.POST, "/api/boards/{id}/favorites").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+            .antMatchers(HttpMethod.GET, "/api/boards/favorites").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+            .antMatchers(HttpMethod.GET, "/boards/search/{keyword}").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
             .antMatchers(HttpMethod.PUT, "/api/boards/{id}").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
             .antMatchers(HttpMethod.DELETE, "/api/boards/{id}").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
 
