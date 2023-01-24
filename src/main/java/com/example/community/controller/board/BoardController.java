@@ -77,6 +77,34 @@ public class BoardController {
         return Response.success(boardService.searchBoard(keyword, page));
     }
 
+    @ApiOperation(value = "게시글 좋아요", notes = "사용자가 게시글 좋아요를 누릅니다")
+    @PostMapping("/boards/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Response likeBoard(@ApiParam(value = "게시글 id",required = true) @PathVariable Long id){
+        return Response.success(boardService.updateLikeBoard(id, getPrincipal()));
+    }
+
+    @ApiOperation(value = "게시글 즐겨찾기", notes = "사용자가 게시글 즐겨찾기를 누릅니다.")
+    @PostMapping("/boards/{id}/favorites")
+    @ResponseStatus(HttpStatus.OK)
+    public Response favoriteBoard(@ApiParam(value = "게시글 id", required = true) @PathVariable Long id) {
+        return Response.success(boardService.updateFavoriteBoard(id, getPrincipal()));
+    }
+
+    @ApiOperation(value = "즐겨찾기 게시판을 조회",notes = "즐겨찾기로 등록한 게시판을 조회합니다.")
+    @GetMapping("/boards/favorites")
+    @ResponseStatus(HttpStatus.OK)
+    public Response findFavoriteBoards(@RequestParam(defaultValue = "0") Integer page){
+        return Response.success(boardService.findFavoriteBoards(page, getPrincipal()));
+    }
+
+    @ApiOperation(value = "좋아요가 많은 순으로 게시판조회", notes = "게시판을 좋아요순으로 조회합니다.")
+    @GetMapping("/boards/likes")
+    @ResponseStatus(HttpStatus.OK)
+    public Response findAllBoardsWithLikes(@RequestParam(defaultValue = "0") Integer page){
+        return Response.success(boardService.findAllBoardsWithLikes(page));
+    }
+
 
     public Member getPrincipal(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
