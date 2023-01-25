@@ -128,7 +128,7 @@ public class BoardService {
     }
 
     private void validateBoardWriter(Board board, Member member){
-        if (!member.equals(board.getMember())){
+        if (!board.isOwnBoard(member)){
             throw new MemberNotEqualsException();
         }
     }
