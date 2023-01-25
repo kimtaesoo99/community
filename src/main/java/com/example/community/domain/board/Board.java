@@ -113,6 +113,9 @@ public class Board extends BaseEntity {
         this.viewCount +=1;
     }
 
+    public boolean isOwnBoard(Member member) {
+        return this.member.equals(member);
+    }
 
     @Getter
     @AllArgsConstructor
