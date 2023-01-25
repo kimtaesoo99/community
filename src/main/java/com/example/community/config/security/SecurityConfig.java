@@ -93,6 +93,10 @@ public class SecurityConfig {
             .antMatchers(HttpMethod.PUT, "/api/boards/{id}").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
             .antMatchers(HttpMethod.DELETE, "/api/boards/{id}").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
 
+            .antMatchers(HttpMethod.GET, "/api/comments").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+            .antMatchers(HttpMethod.POST, "/api/comments").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+            .antMatchers(HttpMethod.DELETE, "/api/comments/{id}").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+            .antMatchers(HttpMethod.PUT, "/api/comments/{id}").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
 
             .anyRequest().authenticated()   // 나머지 API 는 전부 인증 필요
 
