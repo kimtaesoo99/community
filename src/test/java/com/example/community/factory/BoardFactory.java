@@ -2,6 +2,7 @@ package com.example.community.factory;
 
 import com.example.community.domain.board.Board;
 import com.example.community.domain.board.Image;
+import com.example.community.domain.member.Member;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,13 @@ public class BoardFactory {
         List<Image> images = new ArrayList<>();
         images.add(createImage());
         Board board = new Board("title", "content", createMember(), images);
+        return board;
+    }
+
+    public static Board createBoardWithMember(Member member){
+        List<Image> images = new ArrayList<>();
+        images.add(createImage());
+        Board board = new Board("title", "content",member, images);
         return board;
     }
 }
