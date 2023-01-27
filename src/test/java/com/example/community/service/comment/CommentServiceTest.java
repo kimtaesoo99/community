@@ -66,7 +66,7 @@ public class CommentServiceTest {
     @Test
     public void 댓글작성_테스트() {
         // given
-        Board board = new Board(1L, "title", "content", createMember(), List.of(createImage()), 0, 0);
+        Board board = new Board(1L, "title", "content", createMember(), List.of(createImage()), 0, 0,false);
         CommentCreateRequestDto req = new CommentCreateRequestDto(board.getId(), "content");
         given(boardRepository.findById(anyLong())).willReturn(Optional.of(board));
 
@@ -81,7 +81,7 @@ public class CommentServiceTest {
     public void 댓글수정_테스트() {
         // given
         Member member = createMember();
-        Comment comment = new Comment(1L, "content", member, createBoard());
+        Comment comment = new Comment(1L, "content", member, createBoard(),false);
         CommentEditRequestDto req = new CommentEditRequestDto("newContent");
         given(commentRepository.findById(anyLong())).willReturn(Optional.of(comment));
 
@@ -112,7 +112,7 @@ public class CommentServiceTest {
         // given
         Member member = createMember();
         Member member2 = new Member(2l,"u","1","n",null);
-        Comment comment = new Comment(1L, "content", member, createBoard());
+        Comment comment = new Comment(1L, "content", member, createBoard(),false);
         CommentEditRequestDto req = new CommentEditRequestDto("newContent");
         given(commentRepository.findById(anyLong())).willReturn(Optional.of(comment));
 
