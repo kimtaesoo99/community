@@ -98,6 +98,10 @@ public class SecurityConfig {
             .antMatchers(HttpMethod.DELETE, "/api/comments/{id}").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
             .antMatchers(HttpMethod.PUT, "/api/comments/{id}").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
 
+            .antMatchers(HttpMethod.POST, "/api/reports/members").authenticated()
+            .antMatchers(HttpMethod.POST, "/api/reports/boards").authenticated()
+            .antMatchers(HttpMethod.POST, "/api/reports/comments").authenticated()
+
             .anyRequest().authenticated()   // 나머지 API 는 전부 인증 필요
 
             // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
