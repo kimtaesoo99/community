@@ -100,6 +100,22 @@ public class ExceptionAdvice {
         return Response.failure(404, "이미지 업로드 실패");
     }
 
+    // 404 응답
+    // 자기 자신을 신고할 수 없다.
+    @ExceptionHandler(NotSelfReportException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response notSelfReportException() {
+        return Response.failure(404, "자기 자신은 신고할 수 없습니다.");
+    }
+
+    // 404 응답
+    // 이미 신고 기록이 있어서 신고 실패 실패
+    @ExceptionHandler(AlreadyReportException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response alreadyReportException() {
+        return Response.failure(404, "이미 신고를 했습니다.");
+    }
+
     // 401 응답
     // 요청자와 요청한 유저의 정보가 일치하지 않을시에 발생
     @ExceptionHandler(MemberNotEqualsException.class)
