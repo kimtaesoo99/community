@@ -10,6 +10,6 @@ public class CommentFactory {
 
 
     public static Comment createComment(Member member) {
-        return new Comment(1L,"content", member, createBoard());
+        return new Comment(1L,"content", member, createBoard(),false);
     }
 }
