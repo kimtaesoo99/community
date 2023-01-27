@@ -31,10 +31,17 @@ import static java.util.stream.Collectors.toList;
 @RequiredArgsConstructor
 public class BoardService {
 
+    private static final String LIKE_BOARD = "좋아요를 눌렀습니다.";
+    private static final String LIKE_CANCER = "좋아요를 취소했습니다.";
+    private static final String FAVORITE_BOARD = "즐겨찾기를 했습니다.";
+    private static final String FAVORITE_CANCER = "즐겨찾기를 취소했습니다.";
+
     private final BoardRepository boardRepository;
     private final FileService fileService;
     private final LikeRepository likeRepository;
     private final FavoriteRepository favoriteRepository;
+
+
 
     @Transactional
     public void createBoard(BoardCreateRequestDto req, Member member){
@@ -140,13 +147,13 @@ public class BoardService {
     private String createLikeBoard(Board board, Member member) {
         Likes likesBoard = new Likes(board, member);
         likeRepository.save(likesBoard);
-        return "좋아요를 눌렀습니다.";
+        return LIKE_BOARD;
     }
 
     private String removeLikeBoard(Board board, Member member) {
         Likes likesBoard = likeRepository.findByBoardAndMember(board, member).orElseThrow(LikeNotFoundException::new);
         likeRepository.delete(likesBoard);
-        return "좋아요를 취소했습니다.";
+        return LIKE_CANCER;
     }
 
     private boolean hasFavoriteBoard(Board board, Member member) {
@@ -156,13 +163,13 @@ public class BoardService {
     private String createFavoriteBoard(Board board, Member member) {
         Favorite favorite = new Favorite(board, member);
         favoriteRepository.save(favorite);
-        return "게시판을 즐겨찾기에 추가합니다.";
+        return FAVORITE_BOARD;
     }
 
     private String removeFavoriteBoard(Board board, Member member) {
         Favorite favorite = favoriteRepository.findByBoardAndMember(board, member).orElseThrow(FavoriteNotFoundException::new);
         favoriteRepository.delete(favorite);
-        return "게시판을 즐겨찾기에서 삭제합니다.";
+        return FAVORITE_CANCER;
     }
 
 
