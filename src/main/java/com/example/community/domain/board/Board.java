@@ -48,6 +48,8 @@ public class Board extends BaseEntity {
 
     private int viewCount;
 
+    private boolean isReported;
+
     public Board(String title, String content, Member member, List<Image> images) {
         this.title = title;
         this.content = content;
@@ -55,6 +57,7 @@ public class Board extends BaseEntity {
         this.likeCount = 0;
         this.viewCount = 0;
         this.images = new ArrayList<>();
+        isReported = false;
         addImages(images);
     }
 
@@ -115,6 +118,10 @@ public class Board extends BaseEntity {
 
     public boolean isOwnBoard(Member member) {
         return this.member.equals(member);
+    }
+
+    public void isReportedStatus(){
+        isReported = true;
     }
 
     @Getter
