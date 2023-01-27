@@ -198,7 +198,7 @@ class BoardServiceTest {
         String result = boardService.updateFavoriteBoard(id, member);
 
         // then
-        assertThat(result).isEqualTo("게시판을 즐겨찾기에 추가합니다.");
+        assertThat(result).isEqualTo("즐겨찾기를 했습니다.");
         verify(favoriteRepository).save(any());
     }
 
@@ -217,7 +217,7 @@ class BoardServiceTest {
         String result = boardService.updateFavoriteBoard(id, member);
 
         // then
-        assertThat(result).isEqualTo("게시판을 즐겨찾기에서 삭제합니다.");
+        assertThat(result).isEqualTo("즐겨찾기를 취소했습니다.");
         verify(favoriteRepository).delete(any());
     }
 
