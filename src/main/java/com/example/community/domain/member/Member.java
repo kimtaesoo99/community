@@ -31,6 +31,8 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
+    private boolean isReported;
+
     @Builder
     public Member(Long id, String username, String password, String name, Authority authority) {
         this.id = id;
@@ -38,11 +40,16 @@ public class Member extends BaseEntity {
         this.password = password;
         this.name = name;
         this.authority = authority;
+        this.isReported = false;
     }
 
     public void modify(String password,String name) {
         this.password = password;
         this.name = name;
         onPreUpdate();
+    }
+
+    public void isReportedStatus(){
+        isReported = true;
     }
 }
