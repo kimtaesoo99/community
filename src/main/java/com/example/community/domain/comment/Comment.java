@@ -56,4 +56,8 @@ public class Comment extends BaseEntity {
     public void isReportedStatus(){
         isReported = true;
     }
+
+    public void unlockReportedStatus(){
+        isReported = false;
+    }
 }
