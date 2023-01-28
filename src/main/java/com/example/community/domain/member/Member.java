@@ -51,5 +51,11 @@ public class Member extends BaseEntity {
 
     public void isReportedStatus(){
         isReported = true;
+        authority = Authority.ROLE_SUSPENSION;
+    }
+
+    public void unLockedReportedStatus(){
+        isReported = false;
+        authority = Authority.ROLE_USER;
     }
 }
