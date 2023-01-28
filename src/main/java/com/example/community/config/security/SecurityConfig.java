@@ -32,7 +32,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
@@ -101,6 +100,18 @@ public class SecurityConfig {
             .antMatchers(HttpMethod.POST, "/api/reports/members").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
             .antMatchers(HttpMethod.POST, "/api/reports/boards").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
             .antMatchers(HttpMethod.POST, "/api/reports/comments").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+
+
+            .antMatchers(HttpMethod.GET, "/api/admin/manages/members").hasAnyAuthority("ROLE_ADMIN")
+            .antMatchers(HttpMethod.POST, "/api/admin/manages/members/{id}").hasAnyAuthority("ROLE_ADMIN")
+            .antMatchers(HttpMethod.DELETE, "/api/admin/manages/members/{id}").hasAnyAuthority("ROLE_ADMIN")
+            .antMatchers(HttpMethod.GET, "/api/admin/manages/boards").hasAnyAuthority("ROLE_ADMIN")
+            .antMatchers(HttpMethod.POST, "/api/admin/manages/boards/{id}").hasAnyAuthority("ROLE_ADMIN")
+            .antMatchers(HttpMethod.DELETE, "/api/admin/manages/boards/{id}").hasAnyAuthority("ROLE_ADMIN")
+            .antMatchers(HttpMethod.GET, "/api/admin/manages/comments").hasAnyAuthority("ROLE_ADMIN")
+            .antMatchers(HttpMethod.POST, "/api/admin/manages/comments/{id}").hasAnyAuthority("ROLE_ADMIN")
+            .antMatchers(HttpMethod.DELETE, "/api/admin/manages/comments/{id}").hasAnyAuthority("ROLE_ADMIN")
+
 
             .anyRequest().authenticated()   // 나머지 API 는 전부 인증 필요
 
