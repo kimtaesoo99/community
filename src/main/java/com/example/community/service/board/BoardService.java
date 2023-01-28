@@ -6,10 +6,7 @@ import com.example.community.domain.board.Image;
 import com.example.community.domain.board.Likes;
 import com.example.community.domain.member.Member;
 import com.example.community.dto.board.*;
-import com.example.community.exception.BoardNotFoundException;
-import com.example.community.exception.FavoriteNotFoundException;
-import com.example.community.exception.LikeNotFoundException;
-import com.example.community.exception.MemberNotEqualsException;
+import com.example.community.exception.*;
 import com.example.community.repository.board.BoardRepository;
 import com.example.community.repository.board.FavoriteRepository;
 import com.example.community.repository.board.LikeRepository;
@@ -65,6 +62,7 @@ public class BoardService {
     @Transactional
     public BoardFindResponseDto findBoard(Long id){
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
+        if (board.isReported())throw new BoardIsReportedStatusException();
         Member member = board.getMember();
         board.increaseViewCount();
         return BoardFindResponseDto.toDto(member.getUsername(), board);
