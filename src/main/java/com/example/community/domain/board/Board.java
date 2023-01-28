@@ -124,6 +124,10 @@ public class Board extends BaseEntity {
         isReported = true;
     }
 
+    public void unlockReportedStatus(){
+        isReported = false;
+    }
+
     @Getter
     @AllArgsConstructor
     public static class ImageUpdatedResult {
