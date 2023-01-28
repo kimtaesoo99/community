@@ -109,11 +109,27 @@ public class ExceptionAdvice {
     }
 
     // 404 응답
-    // 이미 신고 기록이 있어서 신고 실패 실패
+    // 이미 신고 기록이 있어서 신고 실패
     @ExceptionHandler(AlreadyReportException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response alreadyReportException() {
         return Response.failure(404, "이미 신고를 했습니다.");
+    }
+
+    // 404 응답
+    // 게시판이 신고 누적상태로 불러오기 실패
+    @ExceptionHandler(BoardIsReportedStatusException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response boardIsReportedStatusException() {
+        return Response.failure(404, "신고누적으로 해당 게식글을 볼 수 없습니다.");
+    }
+
+    // 404 응답
+    // 신고가 누적되지 않음.
+    @ExceptionHandler(NotReportedException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response notReportedException() {
+        return Response.failure(404, "신고를 당한 상태가 아닙니다.");
     }
 
     // 401 응답
