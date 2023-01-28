@@ -9,4 +9,5 @@ import java.util.List;
 public interface MemberReportRepository extends JpaRepository<MemberReport,Long> {
     boolean existsByReporterAndReportedMember(Member member, Member reportedMember);
     List<MemberReport> findAllByReportedMember(Member reportedMember);
+    void deleteAllByReportedMember(Member member);
 }
