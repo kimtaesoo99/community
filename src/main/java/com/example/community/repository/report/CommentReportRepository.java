@@ -12,5 +12,6 @@ public interface CommentReportRepository extends JpaRepository<CommentReport,Lon
     boolean existsByReporterAndReportedComment(Member member, Comment reportedComment);
 
     List<CommentReport> findAllByReportedComment(Comment reportedComment);
+    void deleteAllByReportedComment(Comment comment);
 }
 
