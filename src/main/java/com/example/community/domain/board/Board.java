@@ -1,5 +1,6 @@
 package com.example.community.domain.board;
 
+import com.example.community.domain.category.Category;
 import com.example.community.domain.common.BaseEntity;
 import com.example.community.domain.member.Member;
 import com.example.community.dto.board.BoardUpdateRequestDto;
@@ -41,6 +42,11 @@ public class Board extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    private Category category;
+
     @OneToMany(mappedBy = "board",fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Image> images;
 
@@ -50,12 +56,13 @@ public class Board extends BaseEntity {
 
     private boolean isReported;
 
-    public Board(String title, String content, Member member, List<Image> images) {
+    public Board(String title, String content, Member member,Category category, List<Image> images) {
         this.title = title;
         this.content = content;
         this.member = member;
         this.likeCount = 0;
         this.viewCount = 0;
+        this.category = category;
         this.images = new ArrayList<>();
         isReported = false;
         addImages(images);
