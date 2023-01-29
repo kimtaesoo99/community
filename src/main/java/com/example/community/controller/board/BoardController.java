@@ -33,9 +33,19 @@ public class BoardController {
     @ApiOperation(value = "게시글 생성", notes = "게시글을 작성합니다.")
     @PostMapping("/boards")
     @ResponseStatus(HttpStatus.CREATED)
-    public Response createBoard(@Valid @ModelAttribute BoardCreateRequestDto req) {
-        boardService.createBoard(req, getPrincipal());
+    public Response createBoard(@Valid @ModelAttribute BoardCreateRequestDto req,
+                                @RequestParam(value = "category",required = false) Long categoryId){
+        // ex) http://localhost:8080/api/boards?category=3
+        boardService.createBoard(req, getPrincipal(),categoryId);
         return Response.success();
+    }
+
+    @ApiOperation(value = "게시글 목록 조회", notes = "게시글 목록을 조회합니다.")
+    @GetMapping("/boards/all/{categoryId}")
+    @ResponseStatus(HttpStatus.OK)
+    public Response findAllBoardsWithCategory(@ApiParam(value = "카테고리 id", required = true) @PathVariable Long categoryId, @RequestParam(defaultValue = "0") Integer page) {
+        // ex) http://localhost:8080/api/boards/all/{categoryId}?page=0
+        return Response.success(boardService.findAllBoardsWithCategory(page, categoryId));
     }
 
     @ApiOperation(value = "게시글 전체 조회" , notes = "게시글 전체를 조회합니다.")
