@@ -4,12 +4,14 @@ import com.example.community.domain.board.Board;
 import com.example.community.domain.board.Favorite;
 import com.example.community.domain.board.Image;
 import com.example.community.domain.board.Likes;
+import com.example.community.domain.category.Category;
 import com.example.community.domain.member.Member;
 import com.example.community.dto.board.*;
 import com.example.community.exception.*;
 import com.example.community.repository.board.BoardRepository;
 import com.example.community.repository.board.FavoriteRepository;
 import com.example.community.repository.board.LikeRepository;
+import com.example.community.repository.category.CategoryRepository;
 import com.example.community.service.file.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -37,17 +39,34 @@ public class BoardService {
     private final FileService fileService;
     private final LikeRepository likeRepository;
     private final FavoriteRepository favoriteRepository;
+    private final CategoryRepository categoryRepository;
 
 
 
     @Transactional
-    public void createBoard(BoardCreateRequestDto req, Member member){
+    public void createBoard(BoardCreateRequestDto req, Member member,Long categoryId){
         List<Image> images = req.getImages().stream()
             .map(i -> new Image(i.getOriginalFilename()))
             .collect(toList());
-        Board board = new Board(req.getTitle(), req.getContent(), member, images);
+        Category category = getCategory(categoryId);
+        Board board = new Board(req.getTitle(), req.getContent(), member,category, images);
         boardRepository.save(board);
+
         uploadImages(board.getImages(), req.getImages());
+    }
+
+    private Category getCategory(Long categoryId){
+        if (categoryId==null) return null;
+        return categoryRepository.findById(categoryId).orElseThrow(CategoryNotFoundException::new);
+    }
+
+    @Transactional(readOnly = true)
+    public BoardFindAllWithPagingResponseDto findAllBoardsWithCategory(Integer page, Long categoryId) {
+        PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("id").descending());
+        Page<Board> boards = boardRepository.findAllByCategoryId(categoryId,pageRequest);
+        List<BoardFindAllResponseDto> boardsWithDto = boards.stream().map(BoardFindAllResponseDto::toDto)
+            .collect(toList());
+        return BoardFindAllWithPagingResponseDto.toDto(boardsWithDto, new PageInfoDto(boards));
     }
 
     @Transactional(readOnly = true)
