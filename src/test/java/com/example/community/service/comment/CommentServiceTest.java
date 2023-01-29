@@ -66,7 +66,7 @@ public class CommentServiceTest {
     @Test
     public void 댓글작성_테스트() {
         // given
-        Board board = new Board(1L, "title", "content", createMember(), List.of(createImage()), 0, 0,false);
+        Board board = new Board(1L, "title", "content", createMember(),null, List.of(createImage()), 0, 0,false);
         CommentCreateRequestDto req = new CommentCreateRequestDto(board.getId(), "content");
         given(boardRepository.findById(anyLong())).willReturn(Optional.of(board));
 
