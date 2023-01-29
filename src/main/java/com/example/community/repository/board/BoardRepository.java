@@ -24,6 +24,8 @@ public interface BoardRepository extends JpaRepository<Board,Long> {
 
     @Query("select b from Board b where b.isReported =true")
     List<Board> findAllByReportedIsTrue();
+
+    Page<Board> findAllByCategoryId(Long categoryId, Pageable pageable);
 }
 
 
