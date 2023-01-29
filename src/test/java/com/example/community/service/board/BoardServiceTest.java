@@ -60,10 +60,28 @@ class BoardServiceTest {
         Member member = createMember();
 
         //when
-        boardService.createBoard(req,member);
+        boardService.createBoard(req,member,null);
 
         //then
         verify(boardRepository).save(any());
+    }
+
+    @Test
+    public void 게시글목록조회_테스트() throws Exception{
+        //given
+        Integer page = 1;
+        Long categoryId = 1l;
+        PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("id").descending());
+        List<Board> boards = new ArrayList<>();
+        boards.add(createBoard());
+        Page<Board> boardsWithPaging = new PageImpl<>(boards);
+        given(boardRepository.findAllByCategoryId(categoryId,pageRequest)).willReturn(boardsWithPaging);
+
+        //when
+        BoardFindAllWithPagingResponseDto result = boardService.findAllBoardsWithCategory(page,categoryId);
+
+        //then
+        assertThat(result.getBoards().size()).isEqualTo(1);
     }
 
     @Test
@@ -105,7 +123,7 @@ class BoardServiceTest {
             new MockMultipartFile("test", "test.png", MediaType.IMAGE_PNG_VALUE, "test".getBytes())
         ),List.of());
         Member member = createMember();
-        Board board = new Board("t","c",member,List.of(new Image("a.png")));
+        Board board = new Board("t","c",member,null,List.of(new Image("a.png")));
         given(boardRepository.findById(id)).willReturn(Optional.of(board));
 
         //when
@@ -246,7 +264,7 @@ class BoardServiceTest {
         Integer page = 0;
         PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("likeCount").descending());
         List<Board> boards = new ArrayList<>();
-        Board board = new Board("likeBoard", "content", createMember(),List.of(createImage()));
+        Board board = new Board("likeBoard", "content", createMember(),null,List.of(createImage()));
         board.increaseLikeCount();
         boards.add(board);
         boards.add(createBoard());
