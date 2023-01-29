@@ -80,6 +80,20 @@ class BoardControllerTest {
     }
 
     @Test
+    public void 게시글목록조회_테스트() throws Exception{
+        //given
+        Long categoryId = 1l;
+        Integer page = 0;
+        //when
+        mockMvc.perform(
+                get("/api/boards/all/{categoryId}", categoryId))
+            .andExpect(status().isOk());
+
+        //then
+        verify(boardService).findAllBoardsWithCategory(page,categoryId);
+    }
+
+    @Test
     public void 게시글전체조회_테스트()throws Exception{
         //given
         Integer page = 0;
