@@ -84,6 +84,14 @@ public class ExceptionAdvice {
     }
 
     // 404 응답
+    // 카테고리를 찾을 수 없음
+    @ExceptionHandler(CategoryNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response categoryNotFoundException() {
+        return Response.failure(404, "카테고리를 찾을 수 없습니다.");
+    }
+
+    // 404 응답
     // Image 형식 지원하지 않음
     @ExceptionHandler(UnsupportedImageFormatException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -140,4 +148,13 @@ public class ExceptionAdvice {
         return Response.failure(401, "유저 정보가 일치하지 않습니다.");
     }
 
+
+    // 500 에러
+    // 컨버트 실패
+    @ExceptionHandler(CannotConvertHelperException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Response cannotConvertNestedStructureException(CannotConvertHelperException e) {
+        log.error("e = {}", e.getMessage());
+        return Response.failure(500, e.getMessage().toString());
+    }
 }
