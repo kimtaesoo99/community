@@ -4,10 +4,7 @@ import com.example.community.domain.category.Category;
 import com.example.community.domain.common.BaseEntity;
 import com.example.community.domain.member.Member;
 import com.example.community.dto.board.BoardUpdateRequestDto;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +18,7 @@ import static java.util.stream.Collectors.toList;
 
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Board extends BaseEntity {
@@ -54,7 +52,7 @@ public class Board extends BaseEntity {
 
     private int viewCount;
 
-    private boolean isReported;
+    private boolean reportedStatus;
 
     public Board(String title, String content, Member member,Category category, List<Image> images) {
         this.title = title;
@@ -64,7 +62,7 @@ public class Board extends BaseEntity {
         this.viewCount = 0;
         this.category = category;
         this.images = new ArrayList<>();
-        isReported = false;
+        reportedStatus = false;
         addImages(images);
     }
 
@@ -89,13 +87,13 @@ public class Board extends BaseEntity {
         deleted.forEach(di -> this.images.remove(di));
     }
 
-    private ImageUpdatedResult findImageUpdatedResult(List<MultipartFile> addedImageFiles, List<Integer> deletedImageIds) {
+    private ImageUpdatedResult findImageUpdatedResult(List<MultipartFile> addedImageFiles, List<Long> deletedImageIds) {
         List<Image> addedImages = convertImageFilesToImages(addedImageFiles);
         List<Image> deletedImages = convertImageIdsToImages(deletedImageIds);
         return new ImageUpdatedResult(addedImageFiles, addedImages, deletedImages);
     }
 
-    private List<Image> convertImageIdsToImages(List<Integer> imageIds) {
+    private List<Image> convertImageIdsToImages(List<Long> imageIds) {
         return imageIds.stream()
             .map(id -> convertImageIdToImage(id))
             .filter(i -> i.isPresent())
@@ -103,7 +101,7 @@ public class Board extends BaseEntity {
             .collect(toList());
     }
 
-    private Optional<Image> convertImageIdToImage(int id) {
+    private Optional<Image> convertImageIdToImage(Long id) {
         return this.images.stream().filter(i -> i.getId() == (id)).findAny();
     }
 
@@ -127,12 +125,12 @@ public class Board extends BaseEntity {
         return this.member.equals(member);
     }
 
-    public void isReportedStatus(){
-        isReported = true;
+    public void reportBoard(){
+        reportedStatus = true;
     }
 
     public void unlockReportedStatus(){
-        isReported = false;
+        reportedStatus = false;
     }
 
     @Getter
