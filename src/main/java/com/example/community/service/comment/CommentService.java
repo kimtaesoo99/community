@@ -30,7 +30,7 @@ public class CommentService {
     public List<CommentResponseDto> findAllComments(CommentReadNumber number) {
         List<Comment> comments = commentRepository.findAllByBoardId(number.getBoardId());
         return comments.stream()
-            .filter(comment -> !comment.isReported())
+            .filter(comment -> !comment.isReportedStatus())
             .map(comment -> new CommentResponseDto().toDto(comment))
             .collect(Collectors.toList());
     }

@@ -13,7 +13,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByUsername(String username);
     public boolean existsByUsername(String username);
 
-    @Query("select m from Member m where m.isReported =true")
+    @Query("select m from Member m where m.reportedStatus =true")
     List<Member> findAllByReportedIsTrue();
 
 }

@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
@@ -59,14 +59,13 @@ public class BoardService {
         if (categoryId==null) return null;
         return categoryRepository.findById(categoryId).orElseThrow(CategoryNotFoundException::new);
     }
-
     @Transactional(readOnly = true)
     public BoardFindAllWithPagingResponseDto findAllBoardsWithCategory(Integer page, Long categoryId) {
         PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("id").descending());
         Page<Board> boards = boardRepository.findAllByCategoryId(categoryId,pageRequest);
         List<BoardFindAllResponseDto> boardsWithDto = boards.stream().map(BoardFindAllResponseDto::toDto)
             .collect(toList());
-        return BoardFindAllWithPagingResponseDto.toDto(boardsWithDto, new PageInfoDto(boards));
+       return BoardFindAllWithPagingResponseDto.toDto(boardsWithDto, new PageInfoDto(boards));
     }
 
     @Transactional(readOnly = true)
@@ -81,7 +80,7 @@ public class BoardService {
     @Transactional
     public BoardFindResponseDto findBoard(Long id){
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
-        if (board.isReported())throw new BoardIsReportedStatusException();
+        if (board.isReportedStatus())throw new BoardIsReportedStatusException();
         Member member = board.getMember();
         board.increaseViewCount();
         return BoardFindResponseDto.toDto(member.getUsername(), board);

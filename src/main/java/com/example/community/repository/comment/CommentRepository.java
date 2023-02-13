@@ -9,6 +9,6 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment,Long> {
     List<Comment> findAllByBoardId(Long boarId);
 
-    @Query("select c from Comment c where c.isReported =true")
+    @Query("select c from Comment c where c.reportedStatus =true")
     List<Comment> findAllByReportedIsTrue();
 }

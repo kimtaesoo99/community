@@ -37,7 +37,7 @@ public class Comment extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Board board;
 
-    private boolean isReported;
+    private boolean reportedStatus;
 
     public Comment(String content, Member member, Board board) {
         this.content = content;
@@ -53,11 +53,11 @@ public class Comment extends BaseEntity {
         this.content = req.getContent();
     }
 
-    public void isReportedStatus(){
-        isReported = true;
+    public void reportComment(){
+        reportedStatus = true;
     }
 
     public void unlockReportedStatus(){
-        isReported = false;
+        reportedStatus = false;
     }
 }

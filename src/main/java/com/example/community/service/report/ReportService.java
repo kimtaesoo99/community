@@ -59,7 +59,7 @@ public class ReportService {
 
     private void checkReportedBoard(Board reportedBoard){
         if (boardReportRepository.findAllByReportedBoard(reportedBoard).size()>5){
-            reportedBoard.isReportedStatus();
+            reportedBoard.reportBoard();
         }
     }
 
@@ -91,7 +91,7 @@ public class ReportService {
 
     private void checkReportedMember(Member reportedMember){
         if (memberReportRepository.findAllByReportedMember(reportedMember).size()>5){
-            reportedMember.isReportedStatus();
+            reportedMember.reportMember();
         }
     }
 
@@ -124,7 +124,7 @@ public class ReportService {
 
     private void checkReportedComment(Comment reportedComment){
         if (commentReportRepository.findAllByReportedComment(reportedComment).size()>5){
-            reportedComment.isReportedStatus();
+            reportedComment.reportComment();
         }
     }
 
