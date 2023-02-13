@@ -28,5 +28,6 @@ public class BoardUpdateRequestDto {
     private List<MultipartFile> addedImages = new ArrayList<>();
 
     @ApiModelProperty(value = "제거할 이미지 아이디", notes = "제거할 이미지 아이디를 입력해주세요.")
-    private List<Integer> deletedImages = new ArrayList<>();
+    private List<Long> deletedImages = new ArrayList<>();
+
 }
