@@ -128,7 +128,7 @@ class BoardControllerTest {
         Long id =1L;
         List<MultipartFile> addImages = new ArrayList<>();
         addImages.add(new MockMultipartFile("test1","test1.png",MediaType.IMAGE_PNG_VALUE,"test1".getBytes()));
-        List<Integer> deletedImages = List.of(1);
+        List<Long> deletedImages = List.of(1L);
         BoardUpdateRequestDto req = new BoardUpdateRequestDto("title", "content", addImages, deletedImages);
 
         Member member = createMember();
