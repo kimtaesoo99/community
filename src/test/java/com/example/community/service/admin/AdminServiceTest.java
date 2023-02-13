@@ -67,7 +67,7 @@ public class AdminServiceTest {
     public void 신고된유저_정지해제_테스트() {
         // given
         Member member = createMember();
-        member.isReportedStatus();
+        member.reportMember();
         given(memberRepository.findById(anyLong())).willReturn(Optional.of(member));
 
         // when
@@ -75,7 +75,7 @@ public class AdminServiceTest {
 
         // then
         assertThat(result).isEqualTo("신고가 해제되었습니다.");
-        assertThat(member.isReported()).isFalse();
+        assertThat(member.isReportedStatus()).isFalse();
         verify(memberReportRepository).deleteAllByReportedMember(member);
     }
 
@@ -83,7 +83,7 @@ public class AdminServiceTest {
     public void 신고된유저_삭제_테스트(){
         //given
         Member member = createMember();
-        member.isReportedStatus();
+        member.reportMember();
         given(memberRepository.findById(anyLong())).willReturn(Optional.of(member));
 
         String result = adminService.deleteReportedMember(anyLong());
@@ -111,7 +111,7 @@ public class AdminServiceTest {
     void 신고된게시글_정지해제_테스트() {
         // given
         Board board = createBoard();
-        board.isReportedStatus();
+        board.reportBoard();
         given(boardRepository.findById(anyLong())).willReturn(Optional.of(board));
 
         // when
@@ -119,7 +119,7 @@ public class AdminServiceTest {
 
         // then
         assertThat(result).isEqualTo("신고가 해제되었습니다.");
-        assertThat(board.isReported()).isFalse();
+        assertThat(board.isReportedStatus()).isFalse();
         verify(boardReportRepository).deleteAllByReportedBoard(board);
     }
 
@@ -127,7 +127,7 @@ public class AdminServiceTest {
     public void 신고된게시글_삭제_테스트(){
         //given
         Board board = createBoard();
-        board.isReportedStatus();
+        board.reportBoard();
         given(boardRepository.findById(anyLong())).willReturn(Optional.of(board));
 
         String result = adminService.deleteReportedBoard(anyLong());
@@ -155,7 +155,7 @@ public class AdminServiceTest {
     void 신고된댓글_정지해제_테스트() {
         // given
         Comment comment = new Comment("content", createMember(), createBoard());
-        comment.isReportedStatus();
+        comment.reportComment();
         given(commentRepository.findById(anyLong())).willReturn(Optional.of(comment));
 
         // when
@@ -163,7 +163,7 @@ public class AdminServiceTest {
 
         // then
         assertThat(result).isEqualTo("신고가 해제되었습니다.");
-        assertThat(comment.isReported()).isFalse();
+        assertThat(comment.isReportedStatus()).isFalse();
         verify(commentReportRepository).deleteAllByReportedComment(comment);
     }
 
@@ -171,7 +171,7 @@ public class AdminServiceTest {
     public void 신고된댓글_삭제_테스트(){
         //given
         Comment comment = new Comment("content", createMember(), createBoard());
-        comment.isReportedStatus();
+        comment.reportComment();
         given(commentRepository.findById(anyLong())).willReturn(Optional.of(comment));
 
         String result = adminService.deleteReportedComment(anyLong());
