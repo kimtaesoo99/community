@@ -22,7 +22,7 @@ public interface BoardRepository extends JpaRepository<Board,Long> {
         , countQuery = "select count(b) from Board b order by b.id desc")
     Page<Board> findAllByTitleContaining(@Param("title") String keyword, Pageable pageable);
 
-    @Query("select b from Board b where b.isReported =true")
+    @Query("select b from Board b where b.reportedStatus =true")
     List<Board> findAllByReportedIsTrue();
 
     Page<Board> findAllByCategoryId(Long categoryId, Pageable pageable);
