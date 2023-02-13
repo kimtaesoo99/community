@@ -53,7 +53,7 @@ public class AdminService {
     }
 
     private void validateUnlockMember(Member member) {
-        if (!member.isReported()) {
+        if (!member.isReportedStatus()) {
             throw new NotReportedException();
         }
     }
@@ -88,7 +88,7 @@ public class AdminService {
     }
 
     private void validateUnlockBoard(Board board) {
-        if (!board.isReported()) {
+        if (!board.isReportedStatus()) {
             throw new NotReportedException();
         }
     }
@@ -123,7 +123,7 @@ public class AdminService {
     }
 
     private void validateUnlockComment(Comment comment) {
-        if (!comment.isReported()) {
+        if (!comment.isReportedStatus()) {
             throw new NotReportedException();
         }
     }
