@@ -35,8 +35,7 @@ public class ReportService {
     @Transactional
     public String reportBoard(Member member, BoardReportRequestDto req){
         Board reportedBoard = findReportedBoard(member, req.getReportedBoardId());
-        BoardReport boardReport =
-            new BoardReport(member, reportedBoard, req.getContent());
+        BoardReport boardReport = new BoardReport(member, reportedBoard, req.getContent());
         boardReportRepository.save(boardReport);
         checkReportedBoard(reportedBoard);
         return SUCCESS_REPORT;
