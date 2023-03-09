@@ -56,7 +56,9 @@ public class BoardService {
     }
 
     private Category getCategory(Long categoryId){
-        if (categoryId==null) return null;
+        if (categoryId==null) {
+            return null;
+        }
         return categoryRepository.findById(categoryId).orElseThrow(CategoryNotFoundException::new);
     }
     @Transactional(readOnly = true)
@@ -80,7 +82,9 @@ public class BoardService {
     @Transactional
     public BoardFindResponseDto findBoard(Long id){
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
-        if (board.isReportedStatus())throw new BoardIsReportedStatusException();
+        if (board.isReportedStatus()){
+            throw new BoardIsReportedStatusException();
+        }
         Member member = board.getMember();
         board.increaseViewCount();
         return BoardFindResponseDto.toDto(member.getUsername(), board);
