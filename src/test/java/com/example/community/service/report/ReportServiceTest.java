@@ -1,6 +1,7 @@
 package com.example.community.service.report;
 
 import com.example.community.domain.board.Board;
+import com.example.community.domain.board.Image;
 import com.example.community.domain.comment.Comment;
 import com.example.community.domain.member.Member;
 import com.example.community.domain.report.BoardReport;
@@ -9,12 +10,14 @@ import com.example.community.domain.report.MemberReport;
 import com.example.community.dto.report.BoardReportRequestDto;
 import com.example.community.dto.report.CommentReportRequestDto;
 import com.example.community.dto.report.MemberReportRequestDto;
+import com.example.community.exception.NotSelfReportException;
 import com.example.community.repository.board.BoardRepository;
 import com.example.community.repository.comment.CommentRepository;
 import com.example.community.repository.member.MemberRepository;
 import com.example.community.repository.report.BoardReportRepository;
 import com.example.community.repository.report.CommentReportRepository;
 import com.example.community.repository.report.MemberReportRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +28,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
+import static com.example.community.factory.BoardFactory.createBoard;
 import static com.example.community.factory.BoardFactory.createBoardWithMember;
 import static com.example.community.factory.CommentFactory.createComment;
 import static com.example.community.factory.MemberFactory.createMember;
@@ -122,5 +126,53 @@ public class ReportServiceTest {
 
         // then
         assertThat(result).isEqualTo("신고를 하였습니다.");
+    }
+
+    @Test
+    void 본인이작성한게시글신고시예외(){
+        //given
+        Member member =  createMember();
+        Board board = new Board(1l,"title","content",member,null,
+            List.of(new Image("test.jpg")),0,0,false);
+        BoardReportRequestDto req = new BoardReportRequestDto(board.getId(), "별로입니다.");
+
+        given(boardRepository.findById(req.getReportedBoardId())).willReturn(Optional.of(board));
+
+        //when,then
+        Assertions.assertThatThrownBy(() -> reportService.reportBoard(member,req))
+            .isInstanceOf(NotSelfReportException.class);
+    }
+
+    @Test
+    void 본인이작성한댓글신고시예외(){
+        // given
+        Member reportedMember = Member.builder()
+            .id(3l)
+            .username("new")
+            .build();
+        Comment reportedComment = createComment(reportedMember);
+        CommentReportRequestDto req = new CommentReportRequestDto(reportedComment.getId(), "별로입니다.");
+        CommentReport commentReport = new CommentReport(1L, reportedMember, reportedComment, "content");
+
+        given(commentRepository.findById(req.getReportedCommentId())).willReturn(Optional.of(reportedComment));
+
+        //when,then
+        Assertions.assertThatThrownBy(() -> reportService.reportComment(reportedMember,req))
+            .isInstanceOf(NotSelfReportException.class);
+    }
+
+    @Test
+    void 본인을신고시예외(){
+        Member reportedMember = Member.builder()
+            .id(3l)
+            .username("new")
+            .build();
+        MemberReportRequestDto req = new MemberReportRequestDto(reportedMember.getId(), "별로입니다.");
+
+        given(memberRepository.findById(req.getReportedMemberId())).willReturn(Optional.of(reportedMember));
+
+        //when,then
+        Assertions.assertThatThrownBy(() -> reportService.reportMember(reportedMember,req))
+            .isInstanceOf(NotSelfReportException.class);
     }
 }
