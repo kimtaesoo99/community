@@ -33,6 +33,18 @@ Community REST API Server (Main project)
 - Report : 유저 및 게시글, 댓글 신고 관리 기능
 - Admin : 관리를 위한 기능
 
+## 테스트 결과
+
+<img width="638" alt="스크린샷 2023-03-11 오후 10 54 01" src="https://user-images.githubusercontent.com/107785279/224488728-da2a4ec7-3b16-44e6-837a-f516f1542266.png">
+
+
+## 테스트 커버리지
+
+<img width="577" alt="스크린샷 2023-03-11 오후 10 59 20" src="https://user-images.githubusercontent.com/107785279/224488925-0d23d014-a99e-4b42-994d-fdac0cd181cb.png">
+
+
+
+
 
 ### Git Convention
 
