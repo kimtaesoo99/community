@@ -23,15 +23,15 @@ Community REST API Server (Main project)
 - Validation
 - Swagger
 
-API 설명
-Auth : 회원가입 및 Spring Security + JWT 로그인 
-Member : 전체 및 개별 유저 조회, 즐겨찾기 한 글 목록 조회, 유저 정보 관련 CRUD
-Category : 계층형 카테고리 구현
-Board : 게시글 CRUD 및 검색 기능 추가, 이미지 업로드, 게시글 좋아요 및 즐겨찾기 기능
-Comment : 댓글 조회, 작성, 삭제
-Message : 쪽지 CRUD, 받은 쪽지와 보낸 쪽지 사이 둘다 삭제되면 테이블에서 Column 제거
-Report : 유저 및 게시글, 댓글 신고 관리 기능
-Admin : 관리를 위한 기능
+### API 설명
+- Auth : 회원가입 및 Spring Security + JWT 로그인 
+- Member : 전체 및 개별 유저 조회, 즐겨찾기 한 글 목록 조회, 유저 정보 관련 CRUD
+- Category : 계층형 카테고리 구현
+- Board : 게시글 CRUD 및 검색 기능 추가, 이미지 업로드, 게시글 좋아요 및 즐겨찾기 기능
+- Comment : 댓글 조회, 작성, 삭제
+- Message : 쪽지 CRUD, 받은 쪽지와 보낸 쪽지 사이 둘다 삭제되면 테이블에서 Column 제거
+- Report : 유저 및 게시글, 댓글 신고 관리 기능
+- Admin : 관리를 위한 기능
 
 
 ### Git Convention
