@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.example.community.factory.MemberFactory.createMember;
+import static com.example.community.factory.MemberFactory.createMemberWithUsername;
 import static com.example.community.factory.MessageFactory.createMessage;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,9 +41,7 @@ public class MessageServiceTest {
     @Test
     public void 쪽지보내기테스트() throws Exception{
         //given
-        Member sender = Member.builder()
-            .username("sender")
-            .build();
+        Member sender = createMemberWithUsername("sender");
         Member member = createMember();
         MessageCreateRequestDto req = new MessageCreateRequestDto("title", "content", "username");
         given(memberRepository.findByUsername(req.getReceiverUsername())).willReturn(Optional.of(member));
@@ -59,9 +58,7 @@ public class MessageServiceTest {
     public void 받은쪽지_전체조회테스트() throws Exception{
         //given
         Long id = 1L;
-        Member sender = Member.builder()
-            .username("sender")
-            .build();
+        Member sender = createMemberWithUsername("sender");
         Member receiver = createMember();
         List<Message> messages = new ArrayList<>();
         Message message = new Message("title", "content", sender, receiver);
@@ -81,9 +78,7 @@ public class MessageServiceTest {
     public void 받은쪽지_단건조회테스트() throws Exception{
         //given
         Long id = 1L;
-        Member sender = Member.builder()
-            .username("sender")
-            .build();
+        Member sender = createMemberWithUsername("sender");
         Member receiver = createMember();
         Message message = createMessage(id,sender,receiver);
         given(messageRepository.findByIdWithReceiver(id, receiver.getUsername()))
@@ -101,9 +96,7 @@ public class MessageServiceTest {
     public void 보낸쪽지_전체조회테스트() throws Exception{
         //given
         Long id = 1L;
-        Member sender = Member.builder()
-            .username("sender")
-            .build();
+        Member sender = createMemberWithUsername("sender");
         Member receiver = createMember();
         List<Message> messages = new ArrayList<>();
         Message message = new Message("title", "content", sender, receiver);
@@ -123,9 +116,7 @@ public class MessageServiceTest {
     public void 보낸쪽지_단건조회테스트() throws Exception{
         //given
         Long id = 1L;
-        Member sender = Member.builder()
-            .username("sender")
-            .build();
+        Member sender = createMemberWithUsername("sender");
         Member receiver = createMember();
         Message message = createMessage(id,sender,receiver);
         given(messageRepository.findByIdWithSender(id, sender.getUsername()))
@@ -144,9 +135,7 @@ public class MessageServiceTest {
     public void 받은편지_삭제테스트() throws Exception{
         //given
         Long id = 1L;
-        Member sender = Member.builder()
-            .username("sender")
-            .build();
+        Member sender = createMemberWithUsername("sender");
         Member receiver = createMember();
         Message message = createMessage(id,sender,receiver);
         given(messageRepository.findByIdWithReceiver(id, receiver.getUsername()))
@@ -163,9 +152,7 @@ public class MessageServiceTest {
     public void 보낸편지_삭제테스트() throws Exception{
         //given
         Long id = 1L;
-        Member sender = Member.builder()
-            .username("sender")
-            .build();
+        Member sender = createMemberWithUsername("sender");
         Member receiver = createMember();
         Message message = createMessage(id,sender,receiver);
         given( messageRepository.findByIdWithSender(id, sender.getUsername()))
@@ -182,9 +169,7 @@ public class MessageServiceTest {
     public void 편지양쪽_삭제테스트() throws Exception{
         //given
         Long id = 1L;
-        Member sender = Member.builder()
-            .username("sender")
-            .build();
+        Member sender = createMemberWithUsername("sender");
         Member receiver = createMember();
         Message message = createMessage(id,sender,receiver);
         given( messageRepository.findByIdWithSender(id, sender.getUsername()))

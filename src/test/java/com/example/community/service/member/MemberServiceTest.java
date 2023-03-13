@@ -54,10 +54,7 @@ class MemberServiceTest {
     void 회원단건조회테스트() {
         // given
         Long id = 1L;
-        Member member = Member.builder().username("username")
-            .password("1234")
-            .name("name")
-            .build();
+        Member member = createMember();
 
         given(memberRepository.findById(id)).willReturn(Optional.of(member));
 
@@ -71,10 +68,7 @@ class MemberServiceTest {
     @Test
     public void 회원정보수정테스트() {
         //given
-        Member member = Member.builder().username("username")
-            .password("1234")
-            .name("name")
-            .build();
+        Member member = createMember();
         MemberEditRequestDto req = new MemberEditRequestDto("0000", "new");
 
         //when
@@ -87,10 +81,7 @@ class MemberServiceTest {
     @Test
     public void 회원삭제테스트() {
         //given
-        Member member = Member.builder().username("username")
-            .password("1234")
-            .name("name")
-            .build();
+        Member member = createMember();
 
         //when
         memberService.deleteMember(member);

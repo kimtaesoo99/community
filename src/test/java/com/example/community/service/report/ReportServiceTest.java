@@ -28,10 +28,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static com.example.community.factory.BoardFactory.createBoard;
 import static com.example.community.factory.BoardFactory.createBoardWithMember;
 import static com.example.community.factory.CommentFactory.createComment;
 import static com.example.community.factory.MemberFactory.createMember;
+import static com.example.community.factory.MemberFactory.createMemberWithId;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
@@ -55,6 +55,8 @@ public class ReportServiceTest {
     @Mock
     CommentRepository commentRepository;
 
+    private static final String SUCCESS_REPORT = "신고를 하였습니다.";
+
 
     @BeforeEach
 
@@ -62,10 +64,7 @@ public class ReportServiceTest {
     public void 유저신고_테스트() {
         // given
         Member reporter = createMember();
-        Member reportedMember = Member.builder()
-            .id(3l)
-            .username("new")
-            .build();
+        Member reportedMember = createMemberWithId(3l);
         MemberReportRequestDto req = new MemberReportRequestDto(reportedMember.getId(), "별로입니다.");
         MemberReport memberReportHistory = new MemberReport(1L, reporter, reportedMember,req.getContent());
 
@@ -77,7 +76,7 @@ public class ReportServiceTest {
         String result = reportService.reportMember(reporter, req);
 
         // then
-        assertThat(result).isEqualTo("신고를 하였습니다.");
+        assertThat(result).isEqualTo(SUCCESS_REPORT);
 
     }
 
@@ -86,10 +85,7 @@ public class ReportServiceTest {
     void 게시판신고_테스트() {
         // given
         Member reporter = createMember();
-        Member reportedMember = Member.builder()
-            .id(3l)
-            .username("new")
-            .build();
+        Member reportedMember = createMemberWithId(3l);
         Board reportedBoard = createBoardWithMember(reportedMember);
         BoardReportRequestDto req = new BoardReportRequestDto(reportedBoard.getId(), "별로입니다.");
         BoardReport boardReport = new BoardReport(1L, reporter, reportedBoard, "content");
@@ -102,17 +98,14 @@ public class ReportServiceTest {
         String result = reportService.reportBoard(reporter, req);
 
         // then
-        assertThat(result).isEqualTo("신고를 하였습니다.");
+        assertThat(result).isEqualTo(SUCCESS_REPORT);
     }
 
     @Test
     void 댓글신고_테스트() {
         // given
         Member reporter = createMember();
-        Member reportedMember = Member.builder()
-            .id(3l)
-            .username("new")
-            .build();
+        Member reportedMember = createMemberWithId(3l);
         Comment reportedComment = createComment(reportedMember);
         CommentReportRequestDto req = new CommentReportRequestDto(reportedComment.getId(), "별로입니다.");
         CommentReport commentReport = new CommentReport(1L, reporter, reportedComment, "content");
@@ -125,7 +118,7 @@ public class ReportServiceTest {
         String result = reportService.reportComment(reporter, req);
 
         // then
-        assertThat(result).isEqualTo("신고를 하였습니다.");
+        assertThat(result).isEqualTo(SUCCESS_REPORT);
     }
 
     @Test
@@ -146,10 +139,7 @@ public class ReportServiceTest {
     @Test
     void 본인이작성한댓글신고시예외(){
         // given
-        Member reportedMember = Member.builder()
-            .id(3l)
-            .username("new")
-            .build();
+        Member reportedMember = createMemberWithId(3l);
         Comment reportedComment = createComment(reportedMember);
         CommentReportRequestDto req = new CommentReportRequestDto(reportedComment.getId(), "별로입니다.");
         CommentReport commentReport = new CommentReport(1L, reportedMember, reportedComment, "content");
@@ -163,10 +153,7 @@ public class ReportServiceTest {
 
     @Test
     void 본인을신고시예외(){
-        Member reportedMember = Member.builder()
-            .id(3l)
-            .username("new")
-            .build();
+        Member reportedMember = createMemberWithId(3l);
         MemberReportRequestDto req = new MemberReportRequestDto(reportedMember.getId(), "별로입니다.");
 
         given(memberRepository.findById(req.getReportedMemberId())).willReturn(Optional.of(reportedMember));
