@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.example.community.factory.BoardFactory.createBoard;
+import static com.example.community.factory.CommentFactory.createComment;
 import static com.example.community.factory.MemberFactory.createMember;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -154,7 +155,7 @@ public class AdminServiceTest {
     @Test
     void 신고된댓글_정지해제_테스트() {
         // given
-        Comment comment = new Comment("content", createMember(), createBoard());
+        Comment comment = createComment(createMember());
         comment.reportComment();
         given(commentRepository.findById(anyLong())).willReturn(Optional.of(comment));
 
@@ -170,7 +171,7 @@ public class AdminServiceTest {
     @Test
     public void 신고된댓글_삭제_테스트(){
         //given
-        Comment comment = new Comment("content", createMember(), createBoard());
+        Comment comment = createComment(createMember());
         comment.reportComment();
         given(commentRepository.findById(anyLong())).willReturn(Optional.of(comment));
 
