@@ -9,9 +9,8 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    Member findByUsernameAndPassword(String username, String password);
     Optional<Member> findByUsername(String username);
-    public boolean existsByUsername(String username);
+    boolean existsByUsername(String username);
 
     @Query("select m from Member m where m.reportedStatus =true")
     List<Member> findAllByReportedIsTrue();
