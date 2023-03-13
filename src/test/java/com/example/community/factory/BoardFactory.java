@@ -25,4 +25,11 @@ public class BoardFactory {
         Board board = new Board("title", "content",member,null, images);
         return board;
     }
+
+    public static Board createBoardWithId(){
+        List<Image> images = new ArrayList<>();
+        images.add(createImage());
+        Board board = new Board(1l,"title", "content", createMember(),null, images,0,0,false);
+        return board;
+    }
 }
