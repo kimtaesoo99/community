@@ -25,4 +25,12 @@ public class MemberFactory {
         return member;
     }
 
+    public static Member createMemberWithId(Long id){
+        return new Member(id,"username","1234","name",Authority.ROLE_USER);
+    }
+
+    public static Member createMemberWithUsername(String username){
+        return new Member(1l,username,"1234","name",Authority.ROLE_USER);
+    }
+
 }
