@@ -15,8 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.example.community.factory.CategoryFactory.createCategory;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -37,7 +39,7 @@ public class CategoryServiceTest {
     public void 카테고리전체_조회_테스트() {
         // given
         List<Category> categories = new ArrayList<>();
-        categories.add(new Category("categoty",null));
+        categories.add( createCategory());
         given(categoryRepository.findAllOrderByParent()).willReturn(categories);
 
         // when
@@ -50,7 +52,7 @@ public class CategoryServiceTest {
     @Test
     public void 카테고리생성_테스트() {
         // given
-        Category category = new Category("s", null);
+        Category category = createCategory();
         CategoryCreateRequestDto req = new CategoryCreateRequestDto("name", 1l);
         given(categoryRepository.findById(anyLong())).willReturn(Optional.of(category));
 
@@ -64,7 +66,7 @@ public class CategoryServiceTest {
     @Test
     public void 카테고리삭제_테스트() {
         // given
-        Category category = new Category("s", null);
+        Category category = createCategory();
         given(categoryRepository.findById(anyLong())).willReturn(Optional.of(category));
 
         // when

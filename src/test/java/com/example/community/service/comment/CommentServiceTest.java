@@ -21,10 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.example.community.factory.BoardFactory.createBoard;
+import static com.example.community.factory.BoardFactory.createBoardWithId;
 import static com.example.community.factory.CommentFactory.createComment;
-import static com.example.community.factory.ImageFactory.createImage;
 import static com.example.community.factory.MemberFactory.createMember;
+import static com.example.community.factory.MemberFactory.createMember2;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -66,7 +66,7 @@ public class CommentServiceTest {
     @Test
     public void 댓글작성_테스트() {
         // given
-        Board board = new Board(1L, "title", "content", createMember(),null, List.of(createImage()), 0, 0,false);
+        Board board = createBoardWithId();
         CommentCreateRequestDto req = new CommentCreateRequestDto(board.getId(), "content");
         given(boardRepository.findById(anyLong())).willReturn(Optional.of(board));
 
@@ -81,7 +81,7 @@ public class CommentServiceTest {
     public void 댓글수정_테스트() {
         // given
         Member member = createMember();
-        Comment comment = new Comment(1L, "content", member, createBoard(),false);
+        Comment comment = createComment(member);
         CommentEditRequestDto req = new CommentEditRequestDto("newContent");
         given(commentRepository.findById(anyLong())).willReturn(Optional.of(comment));
 
@@ -111,8 +111,8 @@ public class CommentServiceTest {
     public void 댓글수정예외_테스트() {
         // given
         Member member = createMember();
-        Member member2 = new Member(2l,"u","1","n",null);
-        Comment comment = new Comment(1L, "content", member, createBoard(),false);
+        Member member2 = createMember2();
+        Comment comment = createComment(member);
         CommentEditRequestDto req = new CommentEditRequestDto("newContent");
         given(commentRepository.findById(anyLong())).willReturn(Optional.of(comment));
 
@@ -126,7 +126,7 @@ public class CommentServiceTest {
     void 댓글삭제예외_테스트() {
         // given
         Member member = createMember();
-        Member member2 = new Member(2l,"u","1","n",null);
+        Member member2 = createMember2();
         Comment comment = createComment(member);
         given(commentRepository.findById(anyLong())).willReturn(Optional.of(comment));
 
