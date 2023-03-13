@@ -32,7 +32,7 @@ import java.util.Optional;
 import static com.example.community.factory.BoardFactory.createBoard;
 import static com.example.community.factory.ImageFactory.createImage;
 import static com.example.community.factory.MemberFactory.createMember;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -49,6 +49,11 @@ class BoardServiceTest {
     LikeRepository likeRepository;
     @Mock
     FavoriteRepository favoriteRepository;
+
+    private static final String SUCCESS_LIKE = "좋아요를 눌렀습니다.";
+    private static final String CANCER_LIKE = "좋아요를 취소했습니다.";
+    private static final String SUCCESS_FAVORITE = "즐겨찾기를 했습니다.";
+    private static final String CANCER_FAVORITE = "즐겨찾기를 취소했습니다.";
 
     @Test
     public void 게시판생성_테스트() throws Exception{
@@ -180,7 +185,7 @@ class BoardServiceTest {
         String result = boardService.updateLikeBoard(id, member);
 
         // then
-        assertThat(result).isEqualTo("좋아요를 눌렀습니다.");
+        assertThat(result).isEqualTo(SUCCESS_LIKE);
         verify(likeRepository).save(any());
     }
 
@@ -199,7 +204,7 @@ class BoardServiceTest {
         String result = boardService.updateLikeBoard(id, member);
 
         // then
-        assertThat(result).isEqualTo("좋아요를 취소했습니다.");
+        assertThat(result).isEqualTo(CANCER_LIKE);
         verify(likeRepository).delete(any());
     }
 
@@ -216,7 +221,7 @@ class BoardServiceTest {
         String result = boardService.updateFavoriteBoard(id, member);
 
         // then
-        assertThat(result).isEqualTo("즐겨찾기를 했습니다.");
+        assertThat(result).isEqualTo(SUCCESS_FAVORITE);
         verify(favoriteRepository).save(any());
     }
 
@@ -235,7 +240,7 @@ class BoardServiceTest {
         String result = boardService.updateFavoriteBoard(id, member);
 
         // then
-        assertThat(result).isEqualTo("즐겨찾기를 취소했습니다.");
+        assertThat(result).isEqualTo(CANCER_FAVORITE);
         verify(favoriteRepository).delete(any());
     }
 

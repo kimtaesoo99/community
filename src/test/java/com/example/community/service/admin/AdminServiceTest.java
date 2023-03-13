@@ -50,6 +50,10 @@ public class AdminServiceTest {
     @Mock
     CommentReportRepository commentReportRepository;
 
+    private static final String CANCER_REPORT = "신고가 해제되었습니다.";
+    private static final String SUCCESS_REMOVE = "삭제가 되었습니다.";
+
+
     @Test
     public void 신고된유저_목록조회_테스트() {
         // given
@@ -75,13 +79,13 @@ public class AdminServiceTest {
         String result = adminService.unlockMember(anyLong());
 
         // then
-        assertThat(result).isEqualTo("신고가 해제되었습니다.");
+        assertThat(result).isEqualTo(CANCER_REPORT);
         assertThat(member.isReportedStatus()).isFalse();
         verify(memberReportRepository).deleteAllByReportedMember(member);
     }
 
     @Test
-    public void 신고된유저_삭제_테스트(){
+    public void 신고된유저_삭제_테스트() {
         //given
         Member member = createMember();
         member.reportMember();
@@ -90,7 +94,7 @@ public class AdminServiceTest {
         String result = adminService.deleteReportedMember(anyLong());
 
         // then
-        assertThat(result).isEqualTo("삭제가 되었습니다.");
+        assertThat(result).isEqualTo(SUCCESS_REMOVE);
         verify(memberRepository).delete(any());
     }
 
@@ -119,13 +123,13 @@ public class AdminServiceTest {
         String result = adminService.unlockBoard(anyLong());
 
         // then
-        assertThat(result).isEqualTo("신고가 해제되었습니다.");
+        assertThat(result).isEqualTo(CANCER_REPORT);
         assertThat(board.isReportedStatus()).isFalse();
         verify(boardReportRepository).deleteAllByReportedBoard(board);
     }
 
     @Test
-    public void 신고된게시글_삭제_테스트(){
+    public void 신고된게시글_삭제_테스트() {
         //given
         Board board = createBoard();
         board.reportBoard();
@@ -134,7 +138,7 @@ public class AdminServiceTest {
         String result = adminService.deleteReportedBoard(anyLong());
 
         // then
-        assertThat(result).isEqualTo("삭제가 되었습니다.");
+        assertThat(result).isEqualTo(SUCCESS_REMOVE);
         verify(boardRepository).delete(any());
     }
 
@@ -142,7 +146,7 @@ public class AdminServiceTest {
     void 신고된댓글_목록조회_테스트() {
         // given
         List<Comment> comments = new ArrayList<>();
-        comments.add(new Comment("content",createMember(),createBoard()));
+        comments.add(new Comment("content", createMember(), createBoard()));
         given(commentRepository.findAllByReportedIsTrue()).willReturn(comments);
 
         // when
@@ -163,13 +167,13 @@ public class AdminServiceTest {
         String result = adminService.unlockComment(anyLong());
 
         // then
-        assertThat(result).isEqualTo("신고가 해제되었습니다.");
+        assertThat(result).isEqualTo(CANCER_REPORT);
         assertThat(comment.isReportedStatus()).isFalse();
         verify(commentReportRepository).deleteAllByReportedComment(comment);
     }
 
     @Test
-    public void 신고된댓글_삭제_테스트(){
+    public void 신고된댓글_삭제_테스트() {
         //given
         Comment comment = createComment(createMember());
         comment.reportComment();
@@ -178,7 +182,7 @@ public class AdminServiceTest {
         String result = adminService.deleteReportedComment(anyLong());
 
         // then
-        assertThat(result).isEqualTo("삭제가 되었습니다.");
+        assertThat(result).isEqualTo(SUCCESS_REMOVE);
         verify(commentRepository).delete(any());
     }
 }
