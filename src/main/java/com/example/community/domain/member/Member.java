@@ -31,6 +31,7 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
+    @Column(nullable = false)
     private boolean reportedStatus;
 
     @Builder
