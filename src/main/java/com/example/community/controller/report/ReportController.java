@@ -5,7 +5,6 @@ import com.example.community.domain.member.Member;
 import com.example.community.dto.report.BoardReportRequestDto;
 import com.example.community.dto.report.CommentReportRequestDto;
 import com.example.community.dto.report.MemberReportRequestDto;
-import com.example.community.repository.member.MemberRepository;
 import com.example.community.response.Response;
 import com.example.community.service.report.ReportService;
 import io.swagger.annotations.Api;
@@ -21,8 +20,8 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/reports")
 public class ReportController {
+
     private final ReportService reportService;
-    private final MemberRepository memberRepository;
 
     @ApiOperation(value = "게시글 신고", notes = "게시글을 신고합니다.")
     @ResponseStatus(HttpStatus.OK)

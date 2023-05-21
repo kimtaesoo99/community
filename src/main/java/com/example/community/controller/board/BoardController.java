@@ -4,7 +4,6 @@ import com.example.community.config.guard.Login;
 import com.example.community.domain.member.Member;
 import com.example.community.dto.board.BoardCreateRequestDto;
 import com.example.community.dto.board.BoardUpdateRequestDto;
-import com.example.community.repository.member.MemberRepository;
 import com.example.community.response.Response;
 import com.example.community.service.board.BoardService;
 import io.swagger.annotations.Api;
@@ -24,9 +23,7 @@ import javax.validation.Valid;
 @RequestMapping("/api")
 public class BoardController {
 
-    private final MemberRepository memberRepository;
     private final BoardService boardService;
-
 
     @ApiOperation(value = "게시글 생성", notes = "게시글을 작성합니다.")
     @PostMapping("/boards")

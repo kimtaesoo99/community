@@ -3,7 +3,6 @@ package com.example.community.controller.message;
 import com.example.community.config.guard.Login;
 import com.example.community.domain.member.Member;
 import com.example.community.dto.message.MessageCreateRequestDto;
-import com.example.community.repository.member.MemberRepository;
 import com.example.community.response.Response;
 import com.example.community.service.message.MessageService;
 import io.swagger.annotations.Api;
@@ -22,7 +21,6 @@ import javax.validation.Valid;
 public class MessageController {
 
     private final MessageService messageService;
-    private final MemberRepository memberRepository;
 
     @ApiOperation(value = "편지 작성", notes = "편지 보내기")
     @PostMapping("/messages")

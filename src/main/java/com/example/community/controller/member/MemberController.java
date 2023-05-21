@@ -4,7 +4,6 @@ package com.example.community.controller.member;
 import com.example.community.config.guard.Login;
 import com.example.community.domain.member.Member;
 import com.example.community.dto.member.MemberEditRequestDto;
-import com.example.community.repository.member.MemberRepository;
 import com.example.community.response.Response;
 import com.example.community.service.member.MemberService;
 import io.swagger.annotations.Api;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberService memberService;
-    private final MemberRepository memberRepository;
 
     @ApiOperation(value = "회원 전체 조회", notes = "회원 전체 조회")
     @ResponseStatus(HttpStatus.OK)

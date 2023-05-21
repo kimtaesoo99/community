@@ -5,7 +5,6 @@ import com.example.community.domain.member.Member;
 import com.example.community.dto.comment.CommentCreateRequestDto;
 import com.example.community.dto.comment.CommentEditRequestDto;
 import com.example.community.dto.comment.CommentReadNumber;
-import com.example.community.repository.member.MemberRepository;
 import com.example.community.response.Response;
 import com.example.community.service.comment.CommentService;
 import io.swagger.annotations.Api;
@@ -24,7 +23,6 @@ import javax.validation.Valid;
 public class CommentController {
 
     private final CommentService commentService;
-    private final MemberRepository memberRepository;
 
     @ApiOperation(value = "댓글 조회", notes = "댓글을 조회합니다.")
     @GetMapping
