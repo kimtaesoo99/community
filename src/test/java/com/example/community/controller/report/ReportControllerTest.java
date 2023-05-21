@@ -1,10 +1,10 @@
 package com.example.community.controller.report;
 
+import com.example.community.config.guard.LoginMemberArgumentResolver;
 import com.example.community.domain.member.Member;
 import com.example.community.dto.report.BoardReportRequestDto;
 import com.example.community.dto.report.CommentReportRequestDto;
 import com.example.community.dto.report.MemberReportRequestDto;
-import com.example.community.repository.member.MemberRepository;
 import com.example.community.service.report.ReportService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,16 +14,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Collections;
-import java.util.Optional;
-
 import static com.example.community.factory.MemberFactory.createMember;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -38,7 +33,7 @@ public class ReportControllerTest {
     ReportService reportService;
 
     @Mock
-    MemberRepository memberRepository;
+    LoginMemberArgumentResolver loginMemberArgumentResolver;
 
     MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
@@ -46,7 +41,8 @@ public class ReportControllerTest {
     @BeforeEach
     public void beforeEach() {
 
-        mockMvc = MockMvcBuilders.standaloneSetup(reportController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(reportController)
+            .setCustomArgumentResolvers(loginMemberArgumentResolver).build();
     }
 
     @Test
@@ -55,9 +51,8 @@ public class ReportControllerTest {
         MemberReportRequestDto req = new MemberReportRequestDto(1L, "내용");
 
         Member member = createMember();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "", Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
 
         // when, then
@@ -76,10 +71,8 @@ public class ReportControllerTest {
         BoardReportRequestDto req = new BoardReportRequestDto(1L, "내용");
 
         Member member = createMember();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "", Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
-
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         // when, then
         mockMvc.perform(
@@ -97,10 +90,8 @@ public class ReportControllerTest {
         CommentReportRequestDto req = new CommentReportRequestDto(1L, "내용");
 
         Member member = createMember();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "", Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
-
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         // when, then
         mockMvc.perform(

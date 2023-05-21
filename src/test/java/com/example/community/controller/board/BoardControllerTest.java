@@ -1,9 +1,9 @@
 package com.example.community.controller.board;
 
+import com.example.community.config.guard.LoginMemberArgumentResolver;
 import com.example.community.domain.member.Member;
 import com.example.community.dto.board.BoardCreateRequestDto;
 import com.example.community.dto.board.BoardUpdateRequestDto;
-import com.example.community.repository.member.MemberRepository;
 import com.example.community.service.board.BoardService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,20 +14,15 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static com.example.community.factory.MemberFactory.createMember;
-import static org.mockito.ArgumentMatchers.refEq;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -35,19 +30,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 class BoardControllerTest {
+
     @InjectMocks
     BoardController boardController;
-    @Mock
-    MemberRepository memberRepository;
+
     @Mock
     BoardService boardService;
+
+    @Mock
+    LoginMemberArgumentResolver loginMemberArgumentResolver;
     MockMvc mockMvc;
 
     ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     public void beforeEach(){
-        mockMvc = MockMvcBuilders.standaloneSetup(boardController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(boardController)
+            .setCustomArgumentResolvers(loginMemberArgumentResolver)
+            .build();
     }
 
     @Test
@@ -59,9 +59,8 @@ class BoardControllerTest {
         BoardCreateRequestDto req = new BoardCreateRequestDto("title", "content", images);
 
         Member member = createMember();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "", Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         //when,then
         mockMvc.perform(
@@ -132,9 +131,8 @@ class BoardControllerTest {
         BoardUpdateRequestDto req = new BoardUpdateRequestDto("title", "content", addImages, deletedImages);
 
         Member member = createMember();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "", Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         //when, then
         mockMvc.perform(
@@ -156,10 +154,8 @@ class BoardControllerTest {
         //given
         Long id = 1L;
         Member member = createMember();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "", Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
-
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         //when
         mockMvc.perform(
@@ -191,9 +187,8 @@ class BoardControllerTest {
         //given
         Long id =1L;
         Member member = createMember();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "", Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         //when
         mockMvc.perform(
@@ -209,9 +204,8 @@ class BoardControllerTest {
         //given
         Long id =1L;
         Member member = createMember();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "", Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         //when
         mockMvc.perform(
@@ -227,9 +221,8 @@ class BoardControllerTest {
         //given
         Integer page =0;
         Member member = createMember();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "", Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         //when
         mockMvc.perform(

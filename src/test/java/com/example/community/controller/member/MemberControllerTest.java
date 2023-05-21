@@ -1,9 +1,9 @@
 package com.example.community.controller.member;
 
 
+import com.example.community.config.guard.LoginMemberArgumentResolver;
 import com.example.community.domain.member.Member;
 import com.example.community.dto.member.MemberEditRequestDto;
-import com.example.community.repository.member.MemberRepository;
 import com.example.community.service.member.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,16 +13,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Collections;
-import java.util.Optional;
-
 import static com.example.community.factory.MemberFactory.createMember;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -35,16 +30,19 @@ public class MemberControllerTest {
     MemberController memberController;
 
     @Mock
-    MemberRepository memberRepository;
+    MemberService memberService;
 
     @Mock
-    MemberService memberService;
+    LoginMemberArgumentResolver loginMemberArgumentResolver;
+
     MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     public void beforeEach() {
-        mockMvc = MockMvcBuilders.standaloneSetup(memberController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(memberController)
+            .setCustomArgumentResolvers(loginMemberArgumentResolver)
+            .build();
     }
 
     @Test
@@ -71,11 +69,10 @@ public class MemberControllerTest {
     @Test
     public void 회원정보수정테스트() throws Exception {
         // given
-        MemberEditRequestDto req = new MemberEditRequestDto("비밀번호수정","이름 수정");
+        MemberEditRequestDto req = new MemberEditRequestDto("비밀번호수정", "이름 수정");
         Member member = createMember();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "", Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         // when
         mockMvc.perform(
@@ -92,10 +89,8 @@ public class MemberControllerTest {
     public void 회원탈퇴테스트() throws Exception {
         // given
         Member member = createMember();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
-            Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         // when then
         mockMvc.perform(

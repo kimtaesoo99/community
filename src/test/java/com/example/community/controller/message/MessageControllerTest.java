@@ -1,9 +1,9 @@
 package com.example.community.controller.message;
 
 
+import com.example.community.config.guard.LoginMemberArgumentResolver;
 import com.example.community.domain.member.Member;
 import com.example.community.dto.message.MessageCreateRequestDto;
-import com.example.community.repository.member.MemberRepository;
 import com.example.community.service.message.MessageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,16 +13,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Collections;
-import java.util.Optional;
-
 import static com.example.community.factory.MemberFactory.createMember;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -31,12 +26,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 class MessageControllerTest {
+
     @InjectMocks
     MessageController messageController;
+
     @Mock
     MessageService messageService;
+
     @Mock
-    MemberRepository memberRepository;
+    LoginMemberArgumentResolver loginMemberArgumentResolver;
+
 
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -45,7 +44,9 @@ class MessageControllerTest {
 
     @BeforeEach
     public void beforeEach() {
-        mockMvc = MockMvcBuilders.standaloneSetup(messageController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(messageController)
+            .setCustomArgumentResolvers(loginMemberArgumentResolver
+            ).build();
     }
 
     @Test
@@ -53,10 +54,8 @@ class MessageControllerTest {
         //given
         Member member = createMember();
         MessageCreateRequestDto req = new MessageCreateRequestDto("title", "content", "username");
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
-            Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         //when
         mockMvc.perform(post("/api/messages")
@@ -75,10 +74,8 @@ class MessageControllerTest {
         // given
 
         Member member = createMember();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
-            Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         // when
         mockMvc.perform(
@@ -95,10 +92,8 @@ class MessageControllerTest {
         Long id = 1L;
 
         Member member = createMember();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
-            Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         // when
         mockMvc.perform(
@@ -113,10 +108,8 @@ class MessageControllerTest {
     public void 보낸쪽지_전체조회테스트() throws Exception {
         // given
         Member member = createMember();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
-            Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         // when
         mockMvc.perform(
@@ -133,10 +126,8 @@ class MessageControllerTest {
         Long id = 1L;
 
         Member member = createMember();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
-            Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         // when
         mockMvc.perform(
@@ -153,10 +144,8 @@ class MessageControllerTest {
         Long id = 1L;
 
         Member member = createMember();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
-            Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         // when
         mockMvc.perform(
@@ -173,10 +162,8 @@ class MessageControllerTest {
         Long id = 1L;
 
         Member member = createMember();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
-            Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         // when
         mockMvc.perform(

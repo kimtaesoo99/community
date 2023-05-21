@@ -1,10 +1,10 @@
 package com.example.community.controller.comment;
 
+import com.example.community.config.guard.LoginMemberArgumentResolver;
 import com.example.community.domain.member.Member;
 import com.example.community.dto.comment.CommentCreateRequestDto;
 import com.example.community.dto.comment.CommentEditRequestDto;
 import com.example.community.dto.comment.CommentReadNumber;
-import com.example.community.repository.member.MemberRepository;
 import com.example.community.service.comment.CommentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,16 +15,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Collections;
-import java.util.Optional;
-
 import static com.example.community.factory.MemberFactory.createMember;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -36,16 +31,17 @@ public class CommentControllerTest {
     CommentController commentController;
 
     @Mock
-    MemberRepository memberRepository;
+    CommentService commentService;
 
     @Mock
-    CommentService commentService;
+    LoginMemberArgumentResolver loginMemberArgumentResolver;
     MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     public void beforeEach() {
-        mockMvc = MockMvcBuilders.standaloneSetup(commentController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(commentController)
+            .setCustomArgumentResolvers(loginMemberArgumentResolver).build();
     }
 
     @Test
@@ -54,10 +50,8 @@ public class CommentControllerTest {
         CommentCreateRequestDto req = new CommentCreateRequestDto(1L, "content");
 
         Member member = createMember();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
-            Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         //when then
         mockMvc.perform(
@@ -84,6 +78,7 @@ public class CommentControllerTest {
 
         verify(commentService).findAllComments(req);
     }
+
     @Test
 
     public void 댓글수정_테스트() throws Exception {
@@ -92,20 +87,17 @@ public class CommentControllerTest {
         CommentEditRequestDto req = new CommentEditRequestDto("hi");
 
         Member member = createMember();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
-            Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
-
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         // when, then
         mockMvc.perform(
-                put("/api/comments/{id}",id)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(req))
-            ).andExpect(status().isOk());
+            put("/api/comments/{id}", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req))
+        ).andExpect(status().isOk());
 
-        verify(commentService).editComment(req,member,id);
+        verify(commentService).editComment(req, member, id);
     }
 
     @Test
@@ -115,10 +107,8 @@ public class CommentControllerTest {
         Long id = 1L;
 
         Member member = createMember();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getId(), "",
-            Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        given(memberRepository.findByUsername(authentication.getName())).willReturn(Optional.of(member));
+        given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 
         // when, then
         mockMvc.perform(
