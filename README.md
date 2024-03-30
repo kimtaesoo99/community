@@ -1,5 +1,5 @@
 # community
-Community REST API Server (Main project)
+Community REST API Server
 
 
 ### 프로젝트 설명
